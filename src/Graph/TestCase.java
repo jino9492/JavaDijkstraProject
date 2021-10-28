@@ -2,10 +2,18 @@ package Graph;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.awt.FlowLayout;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 
-public class TestCase {
+public class TestCase extends JFrame{
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException{
 		Graph g = new Graph(6);
 		g.ConnectNodes(1, 2, 2);
 		g.ConnectNodes(1, 3, 5);
