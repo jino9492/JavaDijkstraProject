@@ -64,6 +64,10 @@ public class Graph{
 			throw new IllegalArgumentException("This args are can not be 0.");
 	}
 	
+	public ArrayList<Node>[] GetAdj(){
+		return this.adj;
+	}
+	
 	
 	public ArrayList<Integer> GetShortestPath(int startNode, int endNode) { // 최단 경로 구하기
 		CheckAllShortestPath(startNode);
