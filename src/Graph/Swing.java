@@ -1,25 +1,29 @@
 package Graph;
 
 import javax.swing.*;
+import javax.swing.event.AncestorListener;
 
 import java.util.ArrayList;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
-import java.util.Random;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
-
-public class Swing extends JFrame{
-	private JPanel jp = new JPanel();
-	
+public class Swing extends JFrame implements ActionListener{
+	private JPanel jp;
 	private Graph graph;
 	private Circle[] nodePos;
 	private ArrayList<Node>[] adj;
 	private int size;
-	ArrayList<JTextField> tf;
+	
+	JTextField[] tf=new JTextField[11];
+	JButton[] bt=new JButton[11];
+	
 	
   	public Swing(int size) {
+  		jp=new JPanel();
         setTitle("Drawing a Circle");
         setSize(1280 ,920);
         setVisible(true);
@@ -80,9 +84,9 @@ public class Swing extends JFrame{
         Graphics2D drawNodeNumber = (Graphics2D) g;//숫자
         DrawNodeNumber(drawNodeNumber);
         
-        SetTextFiled();
+        SetTextFiled();//텍스트 필드
+        
     }
-    
     public void DrawNode(Graphics2D g) {
     	for (int i = 1; i < size + 1; i++) {
         	Shape circleShape = new Ellipse2D.Float(nodePos[i].GetXPos() - 50, nodePos[i].GetYPos() - 50, 100, 100);
@@ -95,34 +99,63 @@ public class Swing extends JFrame{
     public void DrawEdge(Graphics2D g) {
     	g.setStroke(new BasicStroke(5));
     	g.setColor(Color.gray);
-//    	ArrayList<Line2D> lines = new ArrayList<>();
+    	ArrayList<Line2D> lines = new ArrayList<>();
     	
     	for (int i = 1; i < size + 1; i++) {
     		for (int j = 0; j < adj[i].size();j++) {
     			Line2D curLine = new Line2D.Float(nodePos[i].GetXPos(), nodePos[i].GetYPos(), nodePos[adj[i].get(j).GetTargetNode()].GetXPos(), nodePos[adj[i].get(j).GetTargetNode()].GetYPos());
-//    			if(!lines.contains(curLine)) {
-//    				g.draw(curLine);
-//    				lines.add(curLine);
-//    				System.out.println(curLine);
-    			g.draw(curLine);
+    			if(!lines.contains(curLine)) {
+    				g.draw(curLine);
+    				lines.add(curLine);
+    				System.out.println(curLine);
+    				g.draw(curLine);
     			}
     		}
     	}
+    }
     
     public void DrawNodeNumber(Graphics2D g) {
     	Font font = new Font("Ariel", Font.BOLD, 24);
     	g.setColor(Color.black);
     	g.setFont(font);
-    	
     	for (int i = 1; i < size + 1; i++) {
     		g.drawString(Integer.toString(i), nodePos[i].GetXPos() - 8, nodePos[i].GetYPos() + 8);
     	}
     }
     public void SetTextFiled() {
-    	for(int i=1;i<size+1;i++){
-    		tf.setBounds(4, 4, 340, 330);
+    	int count=1;
+    	ArrayList<Integer> listx=new ArrayList();
+    	ArrayList<Integer> listy=new ArrayList();
+    	for (int i = 1; i < size + 1; i++) {
+    		for (int j = 0; j < adj[i].size();j++) {
+    			int XPos=(int) (nodePos[i].GetXPos()+nodePos[adj[i].get(j).GetTargetNode()].GetXPos())/2-50;
+    			int YPos=(int)(nodePos[i].GetYPos()+nodePos[adj[i].get(j).GetTargetNode()].GetYPos())/2-50;
+    			int x = 0,y=0;
+    			if(listx.contains(XPos))
+    				x=1;
+    			if(listy.contains(YPos))
+    				y=1;
+    			if(x*y==0) {
+    				listx.add(XPos);listy.add(YPos);
+    				tf[count]=new JTextField();
+    				this.add(tf[count]);
+    				tf[count].setBounds(XPos,YPos,60,40);
+    				bt[count]=new JButton();
+    				this.add(bt[count]);
+    				bt[count].setBounds(XPos+60,YPos,40,40);
+    				bt[count].addActionListener(this);
+    				count++;
+    			}
+    		}
     	}
+    	this.setLayout(new BorderLayout());
     }
+    public void actionPerformed(ActionEvent e) {
+    	if(e.getSource()==bt[1]) {
+    		System.out.println("버튼툴림");
+    	}
+    	
+	}
     
     public static void main(String[] args) { 
 		new Swing(6); 
