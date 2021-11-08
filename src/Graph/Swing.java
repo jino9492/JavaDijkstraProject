@@ -4,30 +4,32 @@ import javax.swing.*;
 import javax.swing.event.AncestorListener;
 
 import java.util.ArrayList;
-import java.awt.*;
+import java.awt.*;import java.awt.dnd.DragSourceAdapter;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 
 public class Swing extends JFrame implements ActionListener{
-	private JPanel jp;
-	private Graph graph;
-	private Circle[] nodePos;
-	private ArrayList<Node>[] adj;
-	private int size;
+	protected Graph graph;
+	protected Circle[] nodePos;
+	protected ArrayList<Node>[] adj;
+	protected int size;
 	
 	JTextField[] tf=new JTextField[11];
 	JButton[] bt=new JButton[11];
 	
 	
   	public Swing(int size) {
-  		jp=new JPanel();
-        setTitle("Drawing a Circle");
+        setTitle("Dijkstra Project");
         setSize(1280 ,920);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        createBufferStrategy(2);
         
         this.size = size;
         
@@ -71,10 +73,16 @@ public class Swing extends JFrame implements ActionListener{
     	
     	adj = graph.GetAdj();
     	
+    	DragShapes draggable = new DragShapes();
+    	
+    	addMouseMotionListener(draggable);
+    	addMouseListener(draggable);
     }
 
     @Override
     public void paint(Graphics g) {
+    	super.paint(g);
+    	
     	Graphics2D drawEdge = (Graphics2D) g;//줄
     	DrawEdge(drawEdge);
     	
@@ -85,8 +93,8 @@ public class Swing extends JFrame implements ActionListener{
         DrawNodeNumber(drawNodeNumber);
         
         SetTextFiled();//텍스트 필드
-        
     }
+    
     public void DrawNode(Graphics2D g) {
     	for (int i = 1; i < size + 1; i++) {
         	Shape circleShape = new Ellipse2D.Float(nodePos[i].GetXPos() - 50, nodePos[i].GetYPos() - 50, 100, 100);
@@ -104,12 +112,9 @@ public class Swing extends JFrame implements ActionListener{
     	for (int i = 1; i < size + 1; i++) {
     		for (int j = 0; j < adj[i].size();j++) {
     			Line2D curLine = new Line2D.Float(nodePos[i].GetXPos(), nodePos[i].GetYPos(), nodePos[adj[i].get(j).GetTargetNode()].GetXPos(), nodePos[adj[i].get(j).GetTargetNode()].GetYPos());
-    			if(!lines.contains(curLine)) {
-    				g.draw(curLine);
-    				lines.add(curLine);
-    				System.out.println(curLine);
-    				g.draw(curLine);
-    			}
+				g.draw(curLine);
+				lines.add(curLine);
+				g.draw(curLine);
     		}
     	}
     }
@@ -122,6 +127,7 @@ public class Swing extends JFrame implements ActionListener{
     		g.drawString(Integer.toString(i), nodePos[i].GetXPos() - 8, nodePos[i].GetYPos() + 8);
     	}
     }
+    
     public void SetTextFiled() {
     	int count=1;
     	ArrayList<Integer> listx=new ArrayList();
@@ -150,14 +156,78 @@ public class Swing extends JFrame implements ActionListener{
     	}
     	this.setLayout(new BorderLayout());
     }
+    
     public void actionPerformed(ActionEvent e) {
     	if(e.getSource()==bt[1]) {
     		System.out.println("버튼툴림");
     	}
-    	
+	}
+
+    
+    
+    public static void main(String[] args) {
+    	new Swing(6);
 	}
     
-    public static void main(String[] args) { 
-		new Swing(6); 
-	}
+    public class DragShapes implements MouseListener, MouseMotionListener{
+
+    	private boolean dragging; 
+    	private float offsetX;
+    	private float offsetY;
+    	private int nodeNum;
+    	
+    	@Override
+    	public void mouseDragged(MouseEvent ev){
+    	    if (dragging){
+    		    float mx = ev.getX();
+			    float my = ev.getY();
+			    nodePos[nodeNum].SetXPos(mx - offsetX);
+			    nodePos[nodeNum].SetYPos(my - offsetY);
+			    repaint();
+    	    }
+    	}
+        
+        @Override
+        public void mousePressed(MouseEvent ev){
+    	    float mx = ev.getX();
+    	    float my = ev.getY();
+    	    for (int i = 1; i < size + 1; i++) {
+    		    if (mx > nodePos[i].GetXPos() - 50 && mx < nodePos[i].GetXPos() + 50 && my > nodePos[i].GetYPos() - 50 && my < nodePos[i].GetYPos() + 50){
+    		        dragging = true;
+    		        nodeNum = i;
+    		        offsetX  = mx - nodePos[i].GetXPos();
+    		        offsetY = my - nodePos[i].GetYPos();
+    		    }
+    	    }
+        }
+        
+        @Override
+        public void mouseReleased(MouseEvent ev){
+        	dragging = false;
+        }
+
+    	@Override
+    	public void mouseMoved(MouseEvent e) {
+    		// TODO Auto-generated method stub
+    		
+    	}
+
+    	@Override
+    	public void mouseClicked(MouseEvent e) {
+    		// TODO Auto-generated method stub
+    		
+    	}
+
+    	@Override
+    	public void mouseEntered(MouseEvent e) {
+    		// TODO Auto-generated method stub
+    		
+    	}
+
+    	@Override
+    	public void mouseExited(MouseEvent e) {
+    		// TODO Auto-generated method stub
+    		
+    	}
+    }
 }
