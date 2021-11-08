@@ -13,36 +13,19 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import java.awt.event.*;
-
 
 public class Swing extends JFrame implements ActionListener{
-<<<<<<< HEAD
 	protected Graph graph;
 	protected Circle[] nodePos;
 	protected ArrayList<Node>[] adj;
 	protected int size;
 	
-=======
-	private int i;
-	private JPanel jp=new JPanel();
-	private Graph graph;
-	private Circle[] nodePos;
-	private ArrayList<Node>[] adj;
-	private int size;
-	private int count;
->>>>>>> 9e94fb2db32bf493c3c1a6cea09c816f07c1c36b
 	JTextField[] tf=new JTextField[11];
-	JButton[] bt=new JButton[110];
+	JButton[] bt=new JButton[11];
 	
 	
   	public Swing(int size) {
-<<<<<<< HEAD
         setTitle("Dijkstra Project");
-=======
-  		JPanel jp=new JPanel();
-        setTitle("Drawing a Circle");
->>>>>>> 9e94fb2db32bf493c3c1a6cea09c816f07c1c36b
         setSize(1280 ,920);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -90,14 +73,10 @@ public class Swing extends JFrame implements ActionListener{
     	
     	adj = graph.GetAdj();
     	
-<<<<<<< HEAD
     	DragShapes draggable = new DragShapes();
     	
     	addMouseMotionListener(draggable);
     	addMouseListener(draggable);
-=======
-    	SetTextFiled();//텍스트 필드
->>>>>>> 9e94fb2db32bf493c3c1a6cea09c816f07c1c36b
     }
 
     @Override
@@ -113,10 +92,7 @@ public class Swing extends JFrame implements ActionListener{
         Graphics2D drawNodeNumber = (Graphics2D) g;//숫자
         DrawNodeNumber(drawNodeNumber);
         
-<<<<<<< HEAD
         SetTextFiled();//텍스트 필드
-=======
->>>>>>> 9e94fb2db32bf493c3c1a6cea09c816f07c1c36b
     }
     
     public void DrawNode(Graphics2D g) {
@@ -125,8 +101,6 @@ public class Swing extends JFrame implements ActionListener{
         	g.setColor(Color.white);
         	g.fill(circleShape);
         	g.draw(circleShape);
-        	this.setLayout(new BorderLayout());
-        	this.setVisible(true);
         }  	
     }
     
@@ -138,17 +112,9 @@ public class Swing extends JFrame implements ActionListener{
     	for (int i = 1; i < size + 1; i++) {
     		for (int j = 0; j < adj[i].size();j++) {
     			Line2D curLine = new Line2D.Float(nodePos[i].GetXPos(), nodePos[i].GetYPos(), nodePos[adj[i].get(j).GetTargetNode()].GetXPos(), nodePos[adj[i].get(j).GetTargetNode()].GetYPos());
-<<<<<<< HEAD
 				g.draw(curLine);
 				lines.add(curLine);
 				g.draw(curLine);
-=======
-    			if(!lines.contains(curLine)) {
-    				g.draw(curLine);
-    				lines.add(curLine);
-    				g.draw(curLine);
-    			}
->>>>>>> 9e94fb2db32bf493c3c1a6cea09c816f07c1c36b
     		}
     	}
     }
@@ -163,8 +129,7 @@ public class Swing extends JFrame implements ActionListener{
     }
     
     public void SetTextFiled() {
-    	count=1;
-    	add(jp);
+    	int count=1;
     	ArrayList<Integer> listx=new ArrayList();
     	ArrayList<Integer> listy=new ArrayList();
     	for (int i = 1; i < size + 1; i++) {
@@ -177,35 +142,25 @@ public class Swing extends JFrame implements ActionListener{
     			if(listy.contains(YPos))
     				y=1;
     			if(x*y==0) {
-    				System.out.println(count);
     				listx.add(XPos);listy.add(YPos);
-    				tf[count]=new JTextField(".");
+    				tf[count]=new JTextField();
     				this.add(tf[count]);
     				tf[count].setBounds(XPos,YPos,60,40);
-    				bt[count]=new JButton(""+count);
+    				bt[count]=new JButton();
     				this.add(bt[count]);
     				bt[count].setBounds(XPos+60,YPos,40,40);
+    				bt[count].addActionListener(this);
     				count++;
     			}
     		}
     	}
-    	for(int i=1;i<11;i++) {
-    		bt[i].addActionListener(this);
-    	}
     	this.setLayout(new BorderLayout());
-    	this.setVisible(true);
     }
-<<<<<<< HEAD
     
     public void actionPerformed(ActionEvent e) {
-=======
-    public void actionPerformed(ActionEvent e)
-    {
->>>>>>> 9e94fb2db32bf493c3c1a6cea09c816f07c1c36b
     	if(e.getSource()==bt[1]) {
-    		System.out.println(tf[1].getText());
+    		System.out.println("버튼툴림");
     	}
-<<<<<<< HEAD
 	}
 
     
@@ -275,38 +230,4 @@ public class Swing extends JFrame implements ActionListener{
     		
     	}
     }
-=======
-    	if(e.getSource()==bt[2]) {
-    		System.out.println(tf[2].getText());
-    	}
-    	if(e.getSource()==bt[3]) {
-    		System.out.println(tf[3].getText());
-    	}
-    	if(e.getSource()==bt[4]) {
-    		System.out.println(tf[4].getText());
-    	}
-    	if(e.getSource()==bt[5]) {
-    		System.out.println(tf[5].getText());
-    	}
-    	if(e.getSource()==bt[6]) {
-    		System.out.println(tf[6].getText());
-    	}
-    	if(e.getSource()==bt[7]) {
-    		System.out.println(tf[7].getText());
-    	}
-    	if(e.getSource()==bt[8]) {
-    		System.out.println(tf[8].getText());
-    	}
-    	if(e.getSource()==bt[9]) {
-    		System.out.println(tf[9].getText());
-    	}
-    	if(e.getSource()==bt[10]) {
-    		System.out.println(tf[10].getText());
-    	}
-    }
-    public static void main(String[] args) { 
-		new Swing(6); 
-	}
-	
->>>>>>> 9e94fb2db32bf493c3c1a6cea09c816f07c1c36b
 }
