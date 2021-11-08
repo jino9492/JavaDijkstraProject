@@ -10,20 +10,23 @@ import java.awt.geom.Line2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.awt.event.*;
+
 
 public class Swing extends JFrame implements ActionListener{
-	private JPanel jp;
+	private int i;
+	private JPanel jp=new JPanel();
 	private Graph graph;
 	private Circle[] nodePos;
 	private ArrayList<Node>[] adj;
 	private int size;
-	
+	private int count;
 	JTextField[] tf=new JTextField[11];
-	JButton[] bt=new JButton[11];
+	JButton[] bt=new JButton[110];
 	
 	
   	public Swing(int size) {
-  		jp=new JPanel();
+  		JPanel jp=new JPanel();
         setTitle("Drawing a Circle");
         setSize(1280 ,920);
         setVisible(true);
@@ -71,6 +74,7 @@ public class Swing extends JFrame implements ActionListener{
     	
     	adj = graph.GetAdj();
     	
+    	SetTextFiled();//텍스트 필드
     }
 
     @Override
@@ -84,8 +88,6 @@ public class Swing extends JFrame implements ActionListener{
         Graphics2D drawNodeNumber = (Graphics2D) g;//숫자
         DrawNodeNumber(drawNodeNumber);
         
-        SetTextFiled();//텍스트 필드
-        
     }
     public void DrawNode(Graphics2D g) {
     	for (int i = 1; i < size + 1; i++) {
@@ -93,6 +95,8 @@ public class Swing extends JFrame implements ActionListener{
         	g.setColor(Color.white);
         	g.fill(circleShape);
         	g.draw(circleShape);
+        	this.setLayout(new BorderLayout());
+        	this.setVisible(true);
         }  	
     }
     
@@ -107,7 +111,6 @@ public class Swing extends JFrame implements ActionListener{
     			if(!lines.contains(curLine)) {
     				g.draw(curLine);
     				lines.add(curLine);
-    				System.out.println(curLine);
     				g.draw(curLine);
     			}
     		}
@@ -123,7 +126,8 @@ public class Swing extends JFrame implements ActionListener{
     	}
     }
     public void SetTextFiled() {
-    	int count=1;
+    	count=1;
+    	add(jp);
     	ArrayList<Integer> listx=new ArrayList();
     	ArrayList<Integer> listy=new ArrayList();
     	for (int i = 1; i < size + 1; i++) {
@@ -136,28 +140,59 @@ public class Swing extends JFrame implements ActionListener{
     			if(listy.contains(YPos))
     				y=1;
     			if(x*y==0) {
+    				System.out.println(count);
     				listx.add(XPos);listy.add(YPos);
-    				tf[count]=new JTextField();
+    				tf[count]=new JTextField(".");
     				this.add(tf[count]);
     				tf[count].setBounds(XPos,YPos,60,40);
-    				bt[count]=new JButton();
+    				bt[count]=new JButton(""+count);
     				this.add(bt[count]);
     				bt[count].setBounds(XPos+60,YPos,40,40);
-    				bt[count].addActionListener(this);
     				count++;
     			}
     		}
     	}
-    	this.setLayout(new BorderLayout());
-    }
-    public void actionPerformed(ActionEvent e) {
-    	if(e.getSource()==bt[1]) {
-    		System.out.println("버튼툴림");
+    	for(int i=1;i<11;i++) {
+    		bt[i].addActionListener(this);
     	}
-    	
-	}
-    
+    	this.setLayout(new BorderLayout());
+    	this.setVisible(true);
+    }
+    public void actionPerformed(ActionEvent e)
+    {
+    	if(e.getSource()==bt[1]) {
+    		System.out.println(tf[1].getText());
+    	}
+    	if(e.getSource()==bt[2]) {
+    		System.out.println(tf[2].getText());
+    	}
+    	if(e.getSource()==bt[3]) {
+    		System.out.println(tf[3].getText());
+    	}
+    	if(e.getSource()==bt[4]) {
+    		System.out.println(tf[4].getText());
+    	}
+    	if(e.getSource()==bt[5]) {
+    		System.out.println(tf[5].getText());
+    	}
+    	if(e.getSource()==bt[6]) {
+    		System.out.println(tf[6].getText());
+    	}
+    	if(e.getSource()==bt[7]) {
+    		System.out.println(tf[7].getText());
+    	}
+    	if(e.getSource()==bt[8]) {
+    		System.out.println(tf[8].getText());
+    	}
+    	if(e.getSource()==bt[9]) {
+    		System.out.println(tf[9].getText());
+    	}
+    	if(e.getSource()==bt[10]) {
+    		System.out.println(tf[10].getText());
+    	}
+    }
     public static void main(String[] args) { 
 		new Swing(6); 
 	}
+	
 }
