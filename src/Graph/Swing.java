@@ -189,7 +189,7 @@ public class Swing extends JFrame implements ActionListener{
     	}
     	if(e.getSource()==bt[10]) {
     		System.out.println(tf[10].getText());
-    	}
+    	}//asd
     }
     public static void main(String[] args) { 
 		new Swing(6); 
