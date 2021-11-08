@@ -16,4 +16,12 @@ public class Circle {
 	public float GetYPos() {
 		return yPos;
 	}
+	
+	public void SetXPos(float value) {
+		this.xPos = value;
+	}
+	
+	public void SetYPos(float value) {
+		this.yPos = value;
+	}
 }

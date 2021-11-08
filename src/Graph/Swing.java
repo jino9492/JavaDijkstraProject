@@ -22,7 +22,7 @@ public class Swing extends JFrame implements ActionListener{
 	private int size;
 	private int count;
 	JTextField[] tf=new JTextField[11];
-	JButton[] bt=new JButton[110];
+	JButton[] bt=new JButton[11];
 	
 	
   	public Swing(int size) {
@@ -160,7 +160,12 @@ public class Swing extends JFrame implements ActionListener{
     }
     public void actionPerformed(ActionEvent e)
     {
-    	if(e.getSource()==bt[1]) {
+    	for(int i=1;i<11;i++) {
+    		if(e.getSource()==bt[i]) {
+    			System.out.println(tf[i].getText());
+    		}
+    	}
+    	/*if(e.getSource()==bt[1]) {
     		System.out.println(tf[1].getText());
     	}
     	if(e.getSource()==bt[2]) {
@@ -189,7 +194,7 @@ public class Swing extends JFrame implements ActionListener{
     	}
     	if(e.getSource()==bt[10]) {
     		System.out.println(tf[10].getText());
-    	}//asd
+    	}*/
     }
     public static void main(String[] args) { 
 		new Swing(6); 

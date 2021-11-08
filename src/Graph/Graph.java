@@ -64,11 +64,6 @@ public class Graph{
 			throw new IllegalArgumentException("This args are can not be 0.");
 	}
 	
-	public ArrayList<Node>[] GetAdj(){
-		return this.adj;
-	}
-	
-	
 	public ArrayList<Integer> GetShortestPath(int startNode, int endNode) { // 최단 경로 구하기
 		CheckAllShortestPath(startNode);
 		return path[endNode];
@@ -77,5 +72,9 @@ public class Graph{
 	public float GetShortestDistance(int startNode, int endNode) { // 최단 경로의 거리 구하기
 		CheckAllShortestPath(startNode);
 		return dist[endNode];
+	}
+	
+	public ArrayList<Node>[] GetAdj(){
+		return this.adj;
 	}
 }
