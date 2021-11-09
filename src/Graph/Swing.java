@@ -178,7 +178,14 @@ public class Swing extends JFrame implements ActionListener{
     	@Override
     	public void mouseExited(MouseEvent e) {}
     }
-
+    public void UI() {
+    	setLayout(null);
+    	JLabel la =new JLabel("a");
+    	la.setLocation(130,50);
+    	la.setSize(200,20);
+    	la.setBackground(Color.yellow);
+    	add(la);
+    }
     public class Panel extends JPanel{
     	Image buffImg;
         Graphics buffG;
