@@ -18,8 +18,8 @@ import java.awt.event.MouseMotionListener;
 
 public class Swing extends JFrame implements ActionListener{
 	protected Graph graph;
-	protected Circle[] nodePos;
-	protected ArrayList<Node>[] adj;
+	protected ArrayList<Circle> nodePos;
+	protected ArrayList<ArrayList<Node>> adj;
 	protected int size;
 	private int count;
 	
@@ -39,15 +39,15 @@ public class Swing extends JFrame implements ActionListener{
         
         this.size = size;
         graph = new Graph(size);
-    	nodePos = new Circle[size + 1];
+    	nodePos = new ArrayList<Circle>();
     	
-    	nodePos[0] = null;
-    	nodePos[1] = new Circle(200,150); // 1
-    	nodePos[2] = new Circle(600,100); // 2
-    	nodePos[3] = new Circle(800,300); // 3
-    	nodePos[4] = new Circle(300,250); // 4
-    	nodePos[5] = new Circle(500, 400); // 5
-    	nodePos[6] = new Circle(400,600); // 6
+    	nodePos.add(null);
+    	nodePos.add(new Circle(200,150)); // 1
+    	nodePos.add(new Circle(600,100)); // 2
+    	nodePos.add(new Circle(800,300)); // 3
+    	nodePos.add(new Circle(300,250)); // 4
+    	nodePos.add(new Circle(500, 400)); // 5
+    	nodePos.add(new Circle(400,600)); // 6
     	
     	graph.ConnectNodes(1, 2, 2);
     	graph.ConnectNodes(1, 3, 5);
@@ -92,9 +92,9 @@ public class Swing extends JFrame implements ActionListener{
     	ArrayList<Integer> listx = new ArrayList();
     	ArrayList<Integer> listy = new ArrayList();
     	for (int i = 1; i < size + 1; i++) {
-    		for (int j = 0; j < adj[i].size();j++) {
-    			int XPos=(int) (nodePos[i].GetXPos()+nodePos[adj[i].get(j).GetTargetNode()].GetXPos())/2-50;
-    			int YPos=(int) (nodePos[i].GetYPos()+nodePos[adj[i].get(j).GetTargetNode()].GetYPos())/2-50;
+    		for (int j = 0; j < adj.get(i).size();j++) {
+    			int XPos=(int) (nodePos.get(i).GetXPos()+nodePos.get(adj.get(i).get(j).GetTargetNode()).GetXPos())/2-50;
+    			int YPos=(int) (nodePos.get(i).GetYPos()+nodePos.get(adj.get(i).get(j).GetTargetNode()).GetYPos())/2-50;
     			int x = 0,y=0;
     			if(listx.contains(XPos))
     				x=1;
@@ -142,8 +142,8 @@ public class Swing extends JFrame implements ActionListener{
     	    if (dragging){
     		    float mx = ev.getX();
 			    float my = ev.getY();
-			    nodePos[nodeNum].SetXPos(mx - offsetX);
-			    nodePos[nodeNum].SetYPos(my - offsetY);
+			    nodePos.get(nodeNum).SetXPos(mx - offsetX);
+			    nodePos.get(nodeNum).SetYPos(my - offsetY);
     	    }
     	}
         
@@ -152,11 +152,11 @@ public class Swing extends JFrame implements ActionListener{
     	    float mx = ev.getX();
     	    float my = ev.getY();
     	    for (int i = 1; i < size + 1; i++) {
-    		    if (mx > nodePos[i].GetXPos() - 50 && mx < nodePos[i].GetXPos() + 90 && my > nodePos[i].GetYPos() - 50 && my < nodePos[i].GetYPos() + 90){
+    		    if (mx > nodePos.get(i).GetXPos() - 50 && mx < nodePos.get(i).GetXPos() + 90 && my > nodePos.get(i).GetYPos() - 50 && my < nodePos.get(i).GetYPos() + 90){
     		        dragging = true;
     		        nodeNum = i;
-    		        offsetX  = mx - nodePos[i].GetXPos();
-    		        offsetY = my - nodePos[i].GetYPos();
+    		        offsetX  = mx - nodePos.get(i).GetXPos();
+    		        offsetY = my - nodePos.get(i).GetYPos();
     		    }
     	    }
         }
@@ -178,6 +178,7 @@ public class Swing extends JFrame implements ActionListener{
     	@Override
     	public void mouseExited(MouseEvent e) {}
     }
+<<<<<<< HEAD
     public void UI() {
     	setLayout(null);
     	JLabel la =new JLabel("a");
@@ -187,6 +188,10 @@ public class Swing extends JFrame implements ActionListener{
     	add(la);
     }
     public class Panel extends JPanel{
+=======
+
+    public class Panel extends JPanel implements MouseListener{
+>>>>>>> a6b7b0b4b666c0f01ef15f975928fb07a36f037f
     	Image buffImg;
         Graphics buffG;
         
@@ -224,7 +229,7 @@ public class Swing extends JFrame implements ActionListener{
         
         public void DrawNode(Graphics2D g) {
         	for (int i = 1; i < size + 1; i++) {
-            	Shape circleShape = new Ellipse2D.Float(nodePos[i].GetXPos() - 50, nodePos[i].GetYPos() - 50, 100, 100);
+            	Shape circleShape = new Ellipse2D.Float(nodePos.get(i).GetXPos() - 50, nodePos.get(i).GetYPos() - 50, 100, 100);
             	g.setColor(Color.white);
             	g.fill(circleShape);
             	g.draw(circleShape);
@@ -237,8 +242,8 @@ public class Swing extends JFrame implements ActionListener{
         	ArrayList<Line2D> lines = new ArrayList<>();
         	
         	for (int i = 1; i < size + 1; i++) {
-        		for (int j = 0; j < adj[i].size();j++) {
-        			Line2D curLine = new Line2D.Float(nodePos[i].GetXPos(), nodePos[i].GetYPos(), nodePos[adj[i].get(j).GetTargetNode()].GetXPos(), nodePos[adj[i].get(j).GetTargetNode()].GetYPos());
+        		for (int j = 0; j < adj.get(i).size();j++) {
+        			Line2D curLine = new Line2D.Float(nodePos.get(i).GetXPos(), nodePos.get(i).GetYPos(), nodePos.get(adj.get(i).get(j).GetTargetNode()).GetXPos(), nodePos.get(adj.get(i).get(j).GetTargetNode()).GetYPos());
     				g.draw(curLine);
     				lines.add(curLine);
     				g.draw(curLine);
@@ -251,10 +256,31 @@ public class Swing extends JFrame implements ActionListener{
         	g.setColor(Color.black);
         	g.setFont(font);
         	for (int i = 1; i < size + 1; i++) {
-        		g.drawString(Integer.toString(i), nodePos[i].GetXPos() - 8, nodePos[i].GetYPos() + 8);
+        		g.drawString(Integer.toString(i), nodePos.get(i).GetXPos() - 8, nodePos.get(i).GetYPos() + 8);
         	}
         }
-        
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			if (toolBar.clickedInsertNode) {
+				
+				
+				toolBar.clickedInsertNode = false;
+			}
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {}
+
+		@Override
+		public void mouseExited(MouseEvent e) {}
     }
 
     public class ToolBar extends JToolBar implements ActionListener{
