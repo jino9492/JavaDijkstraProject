@@ -24,8 +24,8 @@ public class Swing extends JFrame implements ActionListener{
 	private int count;
 	
 	Panel panel = new Panel();
-	JTextField[] tf = new JTextField[11];
-	JButton[] bt = new JButton[11];
+	ArrayList<JTextField> tf = new ArrayList<JTextField>();
+	ArrayList<JButton> bt = new ArrayList<JButton>();
 	ToolBar toolBar = new ToolBar();
 	
 	
@@ -40,6 +40,7 @@ public class Swing extends JFrame implements ActionListener{
         this.size = size;
         graph = new Graph(size);
     	nodePos = new ArrayList<Circle>();
+    	UI ui=new UI(size);
     	
     	nodePos.add(null);
     	nodePos.add(new Circle(200,150)); // 1
@@ -82,12 +83,12 @@ public class Swing extends JFrame implements ActionListener{
     	add(panel, BorderLayout.CENTER);
     	//SetTextFiled();
     	add(toolBar, BorderLayout.PAGE_START);
-    	
+    	add(ui,BorderLayout.EAST);
     	revalidate();
     }
 
     
-    public void SetTextFiled() {
+    /*public void SetTextFiled() {
     	count=1;
     	ArrayList<Integer> listx = new ArrayList();
     	ArrayList<Integer> listy = new ArrayList();
@@ -102,9 +103,9 @@ public class Swing extends JFrame implements ActionListener{
     				y=1;
     			if(x*y==0) {
     				listx.add(XPos);listy.add(YPos);
-    				tf[count]=new JTextField(".");
-    				add(tf[count]);
-    				tf[count].setBounds(XPos, YPos, 60, 40);
+    				tf.add(new JTextField("."));
+    				add(tf.get(count));
+    				tf.get(count).setBounds(XPos, YPos, 60, 40);
     				bt[count]=new JButton(""+count);
     				add(bt[count]);
     				bt[count].setBounds(XPos+60,YPos,40,40);
@@ -114,15 +115,15 @@ public class Swing extends JFrame implements ActionListener{
     		}
     	}
     	this.setVisible(true);
-    }
+    }*/
     
     public void actionPerformed(ActionEvent e) {
     	for(int i=1;i<11;i++) {
-    		if(e.getSource()==bt[i]) {
-    			System.out.println(tf[i].getText());
+    		//if(e.getSource()==bt[i]) {
+    			//System.out.println(tf[i].getText());
     		}
     	}
-	}
+	
 
     
     
@@ -179,13 +180,40 @@ public class Swing extends JFrame implements ActionListener{
     	public void mouseExited(MouseEvent e) {}
     }
 
-    public void UI() {
-    	setLayout(null);
-    	JLabel la =new JLabel("a");
-    	la.setLocation(130,50);
-    	la.setSize(200,20);
-    	la.setBackground(Color.yellow);
-    	add(la);
+    public class UI extends JPanel implements ActionListener{
+    	JPanel uiPanel;
+    	public UI(int size) {
+    		count=1;
+    		uiPanel=new JPanel();
+    		uiPanel.setLayout(new BoxLayout(uiPanel,BoxLayout.Y_AXIS));
+    		uiPanel.setBackground(Color.WHITE);
+    		add(uiPanel);
+    		tf.add(null);
+    		bt.add(null); 
+    		for(int i=1;i<size+1;i++) {
+    				tf.add(new JTextField());
+    				//tf.get(count).setBounds(600,50+count*50,1,4);
+    				//add(tf.get(count));
+    				bt.add(new JButton(i+","));
+    				//bt.get(count).setBounds(650,50+count*50,1,4);
+    				//add(bt.get(count));
+    				//uiPanel.add(tf.get(count));
+    				//uiPanel.add(bt.get(count));
+    				uiPanel.add(bt.get(i));
+    				uiPanel.add(tf.get(i));
+    				bt.get(i).setPreferredSize(new Dimension(50, 50));
+    				tf.get(i).setPreferredSize(new Dimension(50, 50));
+    				bt.get(i).addActionListener(this);
+    				count++;
+    		}
+    	}
+    	@Override
+		public void actionPerformed(ActionEvent e) {
+    		int k=6;//°£¼±ÀÇ¼ö
+    			if(e.getSource()==bt.get(1)) {//1°³ºý¿¡ ¾ÈµÊ
+    				System.out.println(tf.get(1).getText());
+    			}
+    	}
     }
 
 
