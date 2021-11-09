@@ -31,7 +31,7 @@ public class Swing extends JFrame implements ActionListener{
 	
   	public Swing(int size) {
         setTitle("Dijkstra Project");
-        setSize(1280 ,920);
+        setSize(1600 ,900);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     	setLocationRelativeTo(null);
@@ -79,7 +79,7 @@ public class Swing extends JFrame implements ActionListener{
     	
     	
     	
-    	add(panel);
+    	add(panel, BorderLayout.CENTER);
     	//SetTextFiled();
     	add(toolBar, BorderLayout.PAGE_START);
     	
@@ -257,6 +257,7 @@ public class Swing extends JFrame implements ActionListener{
     	ArrayList<JButton> jButton;
     	Color defaultButtonColor = Color.darkGray;
     	
+    	public boolean clickedInsertNode;
     	
     	public ToolBar() {
     		jPanel = new JPanel();
@@ -274,7 +275,11 @@ public class Swing extends JFrame implements ActionListener{
     	}
 
 		@Override
-		public void actionPerformed(ActionEvent e) {}
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == jButton.get(0)) {
+				clickedInsertNode = true;
+			}
+		}
 		
 		public void createButton(String CONTENT, int WIDTH, int HEIGHT) {
 			jButton.add(new JButton(CONTENT));
@@ -282,6 +287,7 @@ public class Swing extends JFrame implements ActionListener{
 			jButton.get(count).setForeground(Color.white);
 			jButton.get(count).setPreferredSize(new Dimension(WIDTH, HEIGHT));
 			jButton.get(count).setBackground(defaultButtonColor);
+			jButton.get(count).addActionListener(this);
 			
 			count++;
 		}
