@@ -46,7 +46,7 @@ public class Swing extends JFrame implements ActionListener{
     	nodePos.add(new Circle(600,100)); // 2
     	nodePos.add(new Circle(800,300)); // 3
     	nodePos.add(new Circle(300,250)); // 4
-    	nodePos.add(new Circle(500, 400)); // 5
+    	nodePos.add(new Circle(500,400)); // 5
     	nodePos.add(new Circle(400,600)); // 6
     	
     	graph.ConnectNodes(1, 2, 2);
@@ -130,7 +130,7 @@ public class Swing extends JFrame implements ActionListener{
     	new Swing(6);
 	}
     
-    public class DragShapes implements MouseListener, MouseMotionListener{
+    public class Events implements MouseListener, MouseMotionListener{
 
     	private boolean dragging; 
     	private float offsetX;
@@ -138,21 +138,23 @@ public class Swing extends JFrame implements ActionListener{
     	private int nodeNum;
     	
     	@Override
-    	public void mouseDragged(MouseEvent ev){
+    	public void mouseDragged(MouseEvent e){
+    		//드래그
     	    if (dragging){
-    		    float mx = ev.getX();
-			    float my = ev.getY();
+    		    float mx = e.getX();
+			    float my = e.getY();
 			    nodePos.get(nodeNum).SetXPos(mx - offsetX);
 			    nodePos.get(nodeNum).SetYPos(my - offsetY);
     	    }
     	}
         
         @Override
-        public void mousePressed(MouseEvent ev){
-    	    float mx = ev.getX();
-    	    float my = ev.getY();
-    	    for (int i = 1; i < size + 1; i++) {
-    		    if (mx > nodePos.get(i).GetXPos() - 50 && mx < nodePos.get(i).GetXPos() + 90 && my > nodePos.get(i).GetYPos() - 50 && my < nodePos.get(i).GetYPos() + 90){
+        public void mousePressed(MouseEvent e){
+        	// 드래그 체크
+    	    float mx = e.getX();
+    	    float my = e.getY();
+    	    for (int i = 1; i < nodePos.size(); i++) {
+    		    if (mx > nodePos.get(i).GetXPos() - 50 && mx < nodePos.get(i).GetXPos() + 50 && my > nodePos.get(i).GetYPos() - 50 && my < nodePos.get(i).GetYPos() + 50){
     		        dragging = true;
     		        nodeNum = i;
     		        offsetX  = mx - nodePos.get(i).GetXPos();
@@ -162,15 +164,74 @@ public class Swing extends JFrame implements ActionListener{
         }
         
         @Override
-        public void mouseReleased(MouseEvent ev){
+        public void mouseReleased(MouseEvent e){
         	dragging = false;
         }
 
     	@Override
     	public void mouseMoved(MouseEvent e) {}
 
+    	int edgeCount = 0;
+    	ArrayList<Integer> node = new ArrayList<Integer>();
+    	
     	@Override
-    	public void mouseClicked(MouseEvent e) {}
+    	public void mouseClicked(MouseEvent e) {
+    		float mx = e.getX();
+    	    float my = e.getY();
+    	    
+    	    
+    		// 노드 추가
+    		if (toolBar.clickedInsertNode) {
+    			
+        	    graph.GetPath().add(new ArrayList<Integer>());
+        	    graph.GetDist().add(Float.POSITIVE_INFINITY);
+        	    graph.GetAdj().add(new ArrayList<Node>());
+        	    nodePos.add(new Circle(mx, my));
+        	    
+        	    toolBar.jButton.get(0).setBackground(Color.darkGray);
+        	    toolBar.jButton.get(0).setForeground(Color.white);
+        	    
+        	    panel.repaint();
+    			
+    			toolBar.clickedInsertNode = false;
+    		}
+    		
+    		// 간선 추가
+    		if (toolBar.clickedInsertEdge) {
+    			for (int i = 1; i < nodePos.size(); i++) {
+        		    if (mx > nodePos.get(i).GetXPos() - 50 && mx < nodePos.get(i).GetXPos() + 50 && my > nodePos.get(i).GetYPos() - 50 && my < nodePos.get(i).GetYPos() + 50){
+        		    	if (edgeCount == 1)
+        		    		if (node.get(0).equals(i))
+        		    			break;
+        		    	
+        		    	node.add(i);
+        		    	edgeCount++;
+        		    }
+    			}
+    			
+    			if (edgeCount == 2) {
+    				boolean isConnected = false;
+    				for (int i = 0; i < adj.get(node.get(0)).size(); i++)
+    					if (adj.get(node.get(0)).get(i).GetTargetNode() == node.get(1))
+    						isConnected = true;
+    				
+    				if (!isConnected) {
+    					System.out.println(node.get(0));
+	    				graph.ConnectNodes(node.get(0), node.get(1));
+	    				graph.ConnectNodes(node.get(1), node.get(0));
+    				}
+    				
+    				toolBar.jButton.get(1).setBackground(Color.darkGray);
+            	    toolBar.jButton.get(1).setForeground(Color.white);
+            	    
+            	    panel.repaint();
+    				
+            	    toolBar.clickedInsertEdge = false;
+    				edgeCount = 0;
+    				node.clear();
+    			}
+    		}
+    	}
 
     	@Override
     	public void mouseEntered(MouseEvent e) {}
@@ -189,14 +250,15 @@ public class Swing extends JFrame implements ActionListener{
     }
 
 
-    public class Panel extends JPanel implements MouseListener{
+    public class Panel extends JPanel{
     	Image buffImg;
         Graphics buffG;
+        Events events;
         
     	public Panel() {
-    		DragShapes draggable = new DragShapes();
-        	addMouseMotionListener(draggable);
-        	addMouseListener(draggable);
+    		events = new Events();
+        	addMouseMotionListener(events);
+        	addMouseListener(events);
 			repaint();
 		}
     	
@@ -226,9 +288,15 @@ public class Swing extends JFrame implements ActionListener{
         }
         
         public void DrawNode(Graphics2D g) {
-        	for (int i = 1; i < size + 1; i++) {
+        	for (int i = 1; i < nodePos.size(); i++) {
             	Shape circleShape = new Ellipse2D.Float(nodePos.get(i).GetXPos() - 50, nodePos.get(i).GetYPos() - 50, 100, 100);
             	g.setColor(Color.white);
+            	if (events.node.size() > 0) {
+	            	for (int j = 0; j < events.node.size(); j++) {
+	            		if (events.node.get(j).equals(i))
+	            			g.setColor(Color.red);
+	            	}            	
+            	}
             	g.fill(circleShape);
             	g.draw(circleShape);
             }  	
@@ -253,32 +321,10 @@ public class Swing extends JFrame implements ActionListener{
         	Font font = new Font("Ariel", Font.BOLD, 24);
         	g.setColor(Color.black);
         	g.setFont(font);
-        	for (int i = 1; i < size + 1; i++) {
+        	for (int i = 1; i < nodePos.size(); i++) {
         		g.drawString(Integer.toString(i), nodePos.get(i).GetXPos() - 8, nodePos.get(i).GetYPos() + 8);
         	}
         }
-
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			if (toolBar.clickedInsertNode) {
-				
-				
-				toolBar.clickedInsertNode = false;
-			}
-			
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {}
-
-		@Override
-		public void mouseExited(MouseEvent e) {}
     }
 
     public class ToolBar extends JToolBar implements ActionListener{
@@ -289,6 +335,7 @@ public class Swing extends JFrame implements ActionListener{
     	Color defaultButtonColor = Color.darkGray;
     	
     	public boolean clickedInsertNode;
+    	public boolean clickedInsertEdge;
     	
     	public ToolBar() {
     		jPanel = new JPanel();
@@ -307,8 +354,28 @@ public class Swing extends JFrame implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			actionInit();
+			
+			// 노드 추가 버튼을 눌렀을 때
 			if (e.getSource() == jButton.get(0)) {
+				jButton.get(0).setBackground(Color.white);
+				jButton.get(0).setForeground(Color.darkGray);
 				clickedInsertNode = true;
+			}
+			// 간선 추가 버튼을 눌렀을 때
+			if (e.getSource() == jButton.get(1)) {
+				jButton.get(1).setBackground(Color.white);
+				jButton.get(1).setForeground(Color.darkGray);
+				clickedInsertEdge = true;
+			}
+		}
+		
+		public void actionInit() {
+			for (int i = 0; i < jButton.size(); i++) {
+				jButton.get(i).setBackground(Color.darkGray);
+				jButton.get(i).setForeground(Color.white);
+				clickedInsertNode = false;
+				clickedInsertEdge = false;
 			}
 		}
 		

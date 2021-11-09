@@ -64,6 +64,13 @@ public class Graph{
 			throw new IllegalArgumentException("This args are can not be 0.");
 	}
 	
+	public void ConnectNodes(int thisNode, int targetNode) throws IllegalArgumentException{ // 임시
+		if (thisNode * targetNode != 0)
+			adj.get(thisNode).add(new Node(targetNode, 0));
+		else
+			throw new IllegalArgumentException("This args are can not be 0.");
+	}
+	
 	public ArrayList<Integer> GetShortestPath(int startNode, int endNode) { // 최단 경로 구하기
 		CheckAllShortestPath(startNode);
 		return path.get(endNode);
@@ -76,5 +83,13 @@ public class Graph{
 	
 	public ArrayList<ArrayList<Node>> GetAdj(){
 		return adj;
+	}
+	
+	public ArrayList<ArrayList<Integer>> GetPath(){
+		return path;
+	}
+	
+	public ArrayList<Float> GetDist(){
+		return dist;
 	}
 }
