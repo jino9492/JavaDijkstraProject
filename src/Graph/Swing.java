@@ -24,9 +24,9 @@ public class Swing extends JFrame implements ActionListener{
 	private int count;
 	
 	Panel panel = new Panel();
-	
-	JTextField[] tf=new JTextField[11];
-	JButton[] bt=new JButton[11];
+	JTextField[] tf = new JTextField[11];
+	JButton[] bt = new JButton[11];
+	ToolBar toolBar = new ToolBar();
 	
 	
   	public Swing(int size) {
@@ -34,11 +34,11 @@ public class Swing extends JFrame implements ActionListener{
         setSize(1280 ,920);
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+    	setLocationRelativeTo(null);
+    	setLayout(new BorderLayout());
         
         this.size = size;
-        
         graph = new Graph(size);
-    	
     	nodePos = new Circle[size + 1];
     	
     	nodePos[0] = null;
@@ -77,15 +77,11 @@ public class Swing extends JFrame implements ActionListener{
     	
     	adj = graph.GetAdj();
     	
-    	DragShapes draggable = new DragShapes();
     	
-    	addMouseMotionListener(draggable);
-    	addMouseListener(draggable);
     	
     	add(panel);
     	//SetTextFiled();
-    	
-    	setLocationRelativeTo(null);
+    	add(toolBar, BorderLayout.PAGE_START);
     	
     	revalidate();
     }
@@ -156,7 +152,7 @@ public class Swing extends JFrame implements ActionListener{
     	    float mx = ev.getX();
     	    float my = ev.getY();
     	    for (int i = 1; i < size + 1; i++) {
-    		    if (mx > nodePos[i].GetXPos() - 50 && mx < nodePos[i].GetXPos() + 50 && my > nodePos[i].GetYPos() - 50 && my < nodePos[i].GetYPos() + 50){
+    		    if (mx > nodePos[i].GetXPos() - 50 && mx < nodePos[i].GetXPos() + 90 && my > nodePos[i].GetYPos() - 50 && my < nodePos[i].GetYPos() + 90){
     		        dragging = true;
     		        nodeNum = i;
     		        offsetX  = mx - nodePos[i].GetXPos();
@@ -188,6 +184,9 @@ public class Swing extends JFrame implements ActionListener{
         Graphics buffG;
         
     	public Panel() {
+    		DragShapes draggable = new DragShapes();
+        	addMouseMotionListener(draggable);
+        	addMouseListener(draggable);
 			repaint();
 		}
     	
@@ -249,5 +248,51 @@ public class Swing extends JFrame implements ActionListener{
         	}
         }
         
+    }
+
+    public class ToolBar extends JToolBar implements ActionListener{
+    	
+    	int count = 0;
+    	JPanel jPanel;
+    	ArrayList<JButton> jButton;
+    	Color defaultButtonColor = Color.darkGray;
+    	
+    	
+    	public ToolBar() {
+    		jPanel = new JPanel();
+    		jButton = new ArrayList<JButton>();
+    		
+    		createButton("¡Û", 60, 40);
+    		createButton("£¯", 60, 40);
+    		
+    		jPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+    		
+    		for (int i = 0; i < count; i++) {
+	    		jPanel.add(jButton.get(i));
+	    		add(jPanel);
+    		}
+    	}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {}
+		
+		public void createButton(String CONTENT, int WIDTH, int HEIGHT) {
+			jButton.add(new JButton(CONTENT));
+			
+			jButton.get(count).setForeground(Color.white);
+			jButton.get(count).setPreferredSize(new Dimension(WIDTH, HEIGHT));
+			jButton.get(count).setBackground(defaultButtonColor);
+			
+			count++;
+		}
+		
+		public void createButton(String CONTENT, int WIDTH, int HEIGHT, Color COLOR) {
+			jButton.add(new JButton(CONTENT));
+			
+			jButton.get(count).setPreferredSize(new Dimension(WIDTH, HEIGHT));
+			jButton.get(count).setBackground(COLOR);
+			
+			count++;
+		}
     }
 }
