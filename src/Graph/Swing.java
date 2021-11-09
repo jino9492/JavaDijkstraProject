@@ -11,6 +11,9 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -27,7 +30,7 @@ public class Swing extends JFrame implements ActionListener{
 	ArrayList<JTextField> tf = new ArrayList<JTextField>();
 	ArrayList<JButton> bt = new ArrayList<JButton>();
 	ToolBar toolBar = new ToolBar();
-	
+	UI ui;
 	
   	public Swing(int size) {
         setTitle("Dijkstra Project");
@@ -36,11 +39,11 @@ public class Swing extends JFrame implements ActionListener{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     	setLocationRelativeTo(null);
     	setLayout(new BorderLayout());
+    	setResizable(false);
         
         this.size = size;
         graph = new Graph(size);
     	nodePos = new ArrayList<Circle>();
-    	UI ui=new UI(size);
     	
     	nodePos.add(null);
     	nodePos.add(new Circle(200,150)); // 1
@@ -77,7 +80,7 @@ public class Swing extends JFrame implements ActionListener{
     	graph.ConnectNodes(6, 5, 2);
     	
     	adj = graph.GetAdj();
-    	
+    	ui=new UI(size);
     	
     	
     	add(panel, BorderLayout.CENTER);
@@ -138,6 +141,9 @@ public class Swing extends JFrame implements ActionListener{
     	private float offsetY;
     	private int nodeNum;
     	
+    	int edgeCount = 0;
+    	ArrayList<Integer> node = new ArrayList<Integer>();
+    	
     	@Override
     	public void mouseDragged(MouseEvent e){
     		//드래그
@@ -172,8 +178,7 @@ public class Swing extends JFrame implements ActionListener{
     	@Override
     	public void mouseMoved(MouseEvent e) {}
 
-    	int edgeCount = 0;
-    	ArrayList<Integer> node = new ArrayList<Integer>();
+    	
     	
     	@Override
     	public void mouseClicked(MouseEvent e) {
@@ -198,11 +203,12 @@ public class Swing extends JFrame implements ActionListener{
     		}
     		
     		// 간선 추가
+    		
     		if (toolBar.clickedInsertEdge) {
     			for (int i = 1; i < nodePos.size(); i++) {
         		    if (mx > nodePos.get(i).GetXPos() - 50 && mx < nodePos.get(i).GetXPos() + 50 && my > nodePos.get(i).GetYPos() - 50 && my < nodePos.get(i).GetYPos() + 50){
         		    	if (edgeCount == 1)
-        		    		if (node.get(0).equals(i))
+        		    		if (node.get(0) == i)
         		    			break;
         		    	
         		    	node.add(i);
@@ -212,14 +218,19 @@ public class Swing extends JFrame implements ActionListener{
     			
     			if (edgeCount == 2) {
     				boolean isConnected = false;
-    				for (int i = 0; i < adj.get(node.get(0)).size(); i++)
-    					if (adj.get(node.get(0)).get(i).GetTargetNode() == node.get(1))
+    				int node1 = node.get(0);
+    				int node2 = node.get(1);
+    				
+    				for (int i = 0; i < adj.get(node1).size(); i++)
+    					if (adj.get(node1).get(i).GetTargetNode() == node2)
     						isConnected = true;
     				
     				if (!isConnected) {
-    					System.out.println(node.get(0));
-	    				graph.ConnectNodes(node.get(0), node.get(1));
-	    				graph.ConnectNodes(node.get(1), node.get(0));
+    					System.out.println(node1);
+	    				graph.ConnectNodes(node1, node2);
+	    				graph.ConnectNodes(node2, node1);
+	    				
+	    				ui.InsertTextFieldAndButton(node1, node2);
     				}
     				
     				toolBar.jButton.get(1).setBackground(Color.darkGray);
@@ -241,31 +252,26 @@ public class Swing extends JFrame implements ActionListener{
     	public void mouseExited(MouseEvent e) {}
     }
 
-    public class UI extends JPanel implements ActionListener{
+    public class UI extends JPanel implements ActionListener, KeyListener{
+    	
     	JPanel uiPanel;
+    	ArrayList<JPanel> jPanel = new ArrayList<JPanel>();
+    	JScrollPane panelPane = new JScrollPane(uiPanel);
+    	
     	public UI(int size) {
-    		count=1;
-    		uiPanel=new JPanel();
-    		uiPanel.setLayout(new BoxLayout(uiPanel,BoxLayout.Y_AXIS));
+    		count = 1;
+    		uiPanel = new JPanel();
+    		uiPanel.setLayout(new BoxLayout(uiPanel, BoxLayout.Y_AXIS));
     		uiPanel.setBackground(Color.WHITE);
-    		add(uiPanel);
+    		
     		tf.add(null);
     		bt.add(null); 
-    		for(int i=1;i<size+1;i++) {
-    				tf.add(new JTextField());
-    				//tf.get(count).setBounds(600,50+count*50,1,4);
-    				//add(tf.get(count));
-    				bt.add(new JButton(i+","));
-    				//bt.get(count).setBounds(650,50+count*50,1,4);
-    				//add(bt.get(count));
-    				//uiPanel.add(tf.get(count));
-    				//uiPanel.add(bt.get(count));
-    				uiPanel.add(bt.get(i));
-    				uiPanel.add(tf.get(i));
-    				bt.get(i).setPreferredSize(new Dimension(50, 50));
-    				tf.get(i).setPreferredSize(new Dimension(50, 50));
-    				bt.get(i).addActionListener(this);
-    				count++;
+    		jPanel.add(null);
+    		
+    		for(int i = 1; i < adj.size(); i++) {
+    			for (int j = 0; j < adj.get(i).size(); j++) {
+    				InsertTextFieldAndButton(i, adj.get(i).get(j).GetTargetNode());
+    			}
     		}
     	}
     	@Override
@@ -275,8 +281,55 @@ public class Swing extends JFrame implements ActionListener{
     				System.out.println(tf.get(1).getText());
     			}
     	}
+    	
+    	public void InsertTextFieldAndButton(int curNode, int targetNode) {
+    		jPanel.add(new JPanel());
+    		tf.add(new JTextField());
+    		bt.add(new JButton(curNode + " - " + targetNode));
+    		
+    		jPanel.get(count).add(tf.get(count));
+			jPanel.get(count).add(bt.get(count));
+			
+			jPanel.get(count).setMinimumSize(new Dimension(200, 60));
+			bt.get(count).setPreferredSize(new Dimension(60, 50));
+			tf.get(count).setPreferredSize(new Dimension(150, 50));
+			
+			tf.get(count).setHorizontalAlignment(JTextField.CENTER);
+			// 숫자만 혀용
+			tf.get(count).addKeyListener(new KeyAdapter() {
+	            public void keyTyped(KeyEvent evt) {
+	                if (!Character.isDigit(evt.getKeyChar())) {
+	                    evt.consume();
+	                }
+	            }
+	        });
+			
+			bt.get(count).addActionListener(this);
+			
+			remove(panelPane);
+			
+			uiPanel.add(jPanel.get(count));
+			panelPane = new JScrollPane(uiPanel);
+					
+			panelPane.getVerticalScrollBar().setUnitIncrement(16);
+			panelPane.setPreferredSize(new Dimension(300, 800));
+			
+			add(panelPane);
+			revalidate();
+			repaint();
+			
+			count++;
+    	}
+    	
+		@Override
+		public void keyTyped(KeyEvent e) {}
+		
+		@Override
+		public void keyPressed(KeyEvent e) {}
+		
+		@Override
+		public void keyReleased(KeyEvent e) {}
     }
-
 
     public class Panel extends JPanel{
     	Image buffImg;
@@ -335,7 +388,7 @@ public class Swing extends JFrame implements ActionListener{
         	g.setColor(Color.gray);
         	ArrayList<Line2D> lines = new ArrayList<>();
         	
-        	for (int i = 1; i < size + 1; i++) {
+        	for (int i = 1; i < adj.size(); i++) {
         		for (int j = 0; j < adj.get(i).size();j++) {
         			Line2D curLine = new Line2D.Float(nodePos.get(i).GetXPos(), nodePos.get(i).GetYPos(), nodePos.get(adj.get(i).get(j).GetTargetNode()).GetXPos(), nodePos.get(adj.get(i).get(j).GetTargetNode()).GetYPos());
     				g.draw(curLine);
