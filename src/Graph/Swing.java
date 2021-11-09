@@ -178,7 +178,7 @@ public class Swing extends JFrame implements ActionListener{
     	@Override
     	public void mouseExited(MouseEvent e) {}
     }
-<<<<<<< HEAD
+
     public void UI() {
     	setLayout(null);
     	JLabel la =new JLabel("a");
@@ -187,11 +187,9 @@ public class Swing extends JFrame implements ActionListener{
     	la.setBackground(Color.yellow);
     	add(la);
     }
-    public class Panel extends JPanel{
-=======
+
 
     public class Panel extends JPanel implements MouseListener{
->>>>>>> a6b7b0b4b666c0f01ef15f975928fb07a36f037f
     	Image buffImg;
         Graphics buffG;
         
@@ -335,3 +333,4 @@ public class Swing extends JFrame implements ActionListener{
 		}
     }
 }
+
