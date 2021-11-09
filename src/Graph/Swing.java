@@ -24,6 +24,7 @@ public class Swing extends JFrame implements ActionListener{
 	private int count;
 	
 	Panel panel = new Panel();
+	UiPanel jp=new UiPanel();
 	
 	JTextField[] tf=new JTextField[11];
 	JButton[] bt=new JButton[11];
@@ -83,6 +84,7 @@ public class Swing extends JFrame implements ActionListener{
     	addMouseListener(draggable);
     	
     	add(panel);
+    	add(jp);
     	//SetTextFiled();
     	
     	setLocationRelativeTo(null);
@@ -182,7 +184,26 @@ public class Swing extends JFrame implements ActionListener{
     	@Override
     	public void mouseExited(MouseEvent e) {}
     }
-
+    public class UiPanel extends JPanel{//¿À¸¥ÂÊ UI
+    	ArrayList<Integer> listStart = new ArrayList();
+    	ArrayList<Integer> listEnd = new ArrayList();
+    	int count;
+    	public UiPanel() {
+    		System.out.println(size);
+    		for(int i=1;i<size+1;i++) {
+    			System.out.println(2);
+    			for (int j = 0; j < adj[i].size();j++) {
+    				int startNode=i;
+        			int EndNode=adj[i].get(j).GetTargetNode();
+        			System.out.println(startNode+EndNode);
+        			if(!listStart.contains(startNode)&&!listEnd.contains(EndNode)||!listStart.contains(EndNode)&&!listEnd.contains(startNode)) {
+        				System.out.println("Ãâ·ÂµÊ");
+        			}
+    			}
+    		}
+    		System.out.println("Ãâ·ÂµÊ");
+    		
+    }
     public class Panel extends JPanel{
     	Image buffImg;
         Graphics buffG;
@@ -249,5 +270,6 @@ public class Swing extends JFrame implements ActionListener{
         	}
         }
         
+    }
     }
 }
