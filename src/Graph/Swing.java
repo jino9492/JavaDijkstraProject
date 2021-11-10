@@ -281,7 +281,6 @@ public class Swing extends JFrame implements ActionListener{
     	}
     	@Override
 		public void actionPerformed(ActionEvent e) {
-    		int k=6;
     		int count=1;
     		/*for(int i=0;i<count;i++) {//adj.size는 나중에 버튼의 갯수로 바꾸기
     			if(e.getSource()==bt.get(i)) {
@@ -293,9 +292,11 @@ public class Swing extends JFrame implements ActionListener{
     		}*/
     		for(int i = 1; i < adj.size(); i++) {
     			for (int j = 0; j < adj.get(i).size(); j++) {
+    				if (tf.get(i).getText().isEmpty())
+    					continue;
     				//여기서 중복 확인하기
     				if(e.getSource()==bt.get(count)) {
-    					float value=Float.valueOf(tf.get(i).getText());
+    					float value=Float.valueOf(tf.get(count).getText());
         				adj.get(i).get(j).SetValue(value);
     				}
     				count++;
