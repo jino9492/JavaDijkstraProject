@@ -141,7 +141,7 @@ public class Swing extends JFrame implements ActionListener{
     	private float offsetY;
     	private int nodeNum;
     	
-    	int edgeCount = 0;
+    	int count = 0;
     	ArrayList<Integer> node = new ArrayList<Integer>();
     	
     	@Override
@@ -203,46 +203,68 @@ public class Swing extends JFrame implements ActionListener{
     		}
     		
     		// 간선 추가
-    		
     		if (toolBar.clickedInsertEdge) {
     			for (int i = 1; i < nodePos.size(); i++) {
         		    if (mx > nodePos.get(i).GetXPos() - 50 && mx < nodePos.get(i).GetXPos() + 50 && my > nodePos.get(i).GetYPos() - 50 && my < nodePos.get(i).GetYPos() + 50){
-        		    	if (edgeCount == 1)
+        		    	if (count == 1)
         		    		if (node.get(0) == i)
         		    			break;
         		    	
         		    	node.add(i);
-        		    	edgeCount++;
+        		    	count++;
         		    }
     			}
     			
-    			if (edgeCount == 2) {
-    				boolean isConnected = false;
-    				int node1 = node.get(0);
-    				int node2 = node.get(1);
-    				
-    				for (int i = 0; i < adj.get(node1).size(); i++)
-    					if (adj.get(node1).get(i).GetTargetNode() == node2)
-    						isConnected = true;
-    				
-    				if (!isConnected) {
-    					System.out.println(node1);
-	    				graph.ConnectNodes(node1, node2);
-	    				graph.ConnectNodes(node2, node1);
-	    				
-	    				ui.InsertTextFieldAndButton(node1, node2);
-    				}
-    				
-    				toolBar.jButton.get(1).setBackground(Color.darkGray);
-            	    toolBar.jButton.get(1).setForeground(Color.white);
-            	    
-            	    panel.repaint();
-    				
-            	    toolBar.clickedInsertEdge = false;
-    				edgeCount = 0;
-    				node.clear();
+    			if (count == 2) {
+    				Connect();
+    			}
+    			
+    		}
+    		
+    		if (toolBar.clickedGetShortestPath) {
+    			for (int i = 1; i < nodePos.size(); i++) {
+        		    if (mx > nodePos.get(i).GetXPos() - 50 && mx < nodePos.get(i).GetXPos() + 50 && my > nodePos.get(i).GetYPos() - 50 && my < nodePos.get(i).GetYPos() + 50){
+        		    	if (count == 1)
+        		    		if (node.get(0) == i)
+        		    			break;
+        		    	
+        		    	node.add(i);
+        		    	count++;
+        		    }
+    			}
+    			
+    			if (count == 2) {
+    				ArrayList<Integer> shortestPath = graph.GetShortestPath(node.get(0), node.get(1));
+    				System.out.println(shortestPath);
     			}
     		}
+    	}
+    	
+    	public void Connect() {
+    		boolean isConnected = false;
+			int node1 = node.get(0);
+			int node2 = node.get(1);
+			
+			for (int i = 0; i < adj.get(node1).size(); i++)
+				if (adj.get(node1).get(i).GetTargetNode() == node2)
+					isConnected = true;
+			
+			if (!isConnected) {
+				System.out.println(node1);
+				graph.ConnectNodes(node1, node2);
+				graph.ConnectNodes(node2, node1);
+				
+				ui.InsertTextFieldAndButton(node1, node2);
+			}
+			
+			toolBar.jButton.get(1).setBackground(Color.darkGray);
+    	    toolBar.jButton.get(1).setForeground(Color.white);
+    	    
+    	    panel.repaint();
+			
+    	    toolBar.clickedInsertEdge = false;
+			count = 0;
+			node.clear();
     	}
 
     	@Override
@@ -417,6 +439,7 @@ public class Swing extends JFrame implements ActionListener{
     	
     	public boolean clickedInsertNode;
     	public boolean clickedInsertEdge;
+    	public boolean clickedGetShortestPath;
     	
     	public ToolBar() {
     		jPanel = new JPanel();
@@ -424,6 +447,7 @@ public class Swing extends JFrame implements ActionListener{
     		
     		createButton("○", 60, 40);
     		createButton("／", 60, 40);
+    		createButton("GetShortestPath", 200, 40);
     		
     		jPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
     		
@@ -449,15 +473,22 @@ public class Swing extends JFrame implements ActionListener{
 				jButton.get(1).setForeground(Color.darkGray);
 				clickedInsertEdge = true;
 			}
+			
+			// 최단 경로 구하기
+			if (e.getSource() == jButton.get(2)) {
+				jButton.get(1).setBackground(Color.white);
+				jButton.get(1).setForeground(Color.darkGray);
+				clickedGetShortestPath = true;
+			}
 		}
 		
 		public void actionInit() {
 			for (int i = 0; i < jButton.size(); i++) {
 				jButton.get(i).setBackground(Color.darkGray);
 				jButton.get(i).setForeground(Color.white);
-				clickedInsertNode = false;
-				clickedInsertEdge = false;
 			}
+			clickedInsertNode = false;
+			clickedInsertEdge = false;
 		}
 		
 		public void createButton(String CONTENT, int WIDTH, int HEIGHT) {
@@ -467,15 +498,8 @@ public class Swing extends JFrame implements ActionListener{
 			jButton.get(count).setPreferredSize(new Dimension(WIDTH, HEIGHT));
 			jButton.get(count).setBackground(defaultButtonColor);
 			jButton.get(count).addActionListener(this);
-			
-			count++;
-		}
-		
-		public void createButton(String CONTENT, int WIDTH, int HEIGHT, Color COLOR) {
-			jButton.add(new JButton(CONTENT));
-			
-			jButton.get(count).setPreferredSize(new Dimension(WIDTH, HEIGHT));
-			jButton.get(count).setBackground(COLOR);
+			jButton.get(count).setBorderPainted(false);
+			jButton.get(count).setFocusPainted(false);
 			
 			count++;
 		}
