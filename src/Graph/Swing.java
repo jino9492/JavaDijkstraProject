@@ -91,35 +91,6 @@ public class Swing extends JFrame implements ActionListener{
     }
 
     
-    /*public void SetTextFiled() {
-    	count=1;
-    	ArrayList<Integer> listx = new ArrayList();
-    	ArrayList<Integer> listy = new ArrayList();
-    	for (int i = 1; i < size + 1; i++) {
-    		for (int j = 0; j < adj.get(i).size();j++) {
-    			int XPos=(int) (nodePos.get(i).GetXPos()+nodePos.get(adj.get(i).get(j).GetTargetNode()).GetXPos())/2-50;
-    			int YPos=(int) (nodePos.get(i).GetYPos()+nodePos.get(adj.get(i).get(j).GetTargetNode()).GetYPos())/2-50;
-    			int x = 0,y=0;
-    			if(listx.contains(XPos))
-    				x=1;
-    			if(listy.contains(YPos))
-    				y=1;
-    			if(x*y==0) {
-    				listx.add(XPos);listy.add(YPos);
-    				tf.add(new JTextField("."));
-    				add(tf.get(count));
-    				tf.get(count).setBounds(XPos, YPos, 60, 40);
-    				bt[count]=new JButton(""+count);
-    				add(bt[count]);
-    				bt[count].setBounds(XPos+60,YPos,40,40);
-    				bt[count].addActionListener(this);
-    				count++;
-    			}
-    		}
-    	}
-    	this.setVisible(true);
-    }*/
-    
     public void actionPerformed(ActionEvent e) {
     	for(int i=1;i<11;i++) {
     		//if(e.getSource()==bt[i]) {
@@ -385,6 +356,8 @@ public class Swing extends JFrame implements ActionListener{
             Graphics2D drawNodeNumber = (Graphics2D) buffG;//¼ýÀÚ
             DrawNodeNumber(drawNodeNumber);
             
+            Graphics2D DrawNodeLength=(Graphics2D) buffG;
+            DrawNodeLength(drawNodeNumber);
             
             g.drawImage(buffImg, 0, 0, this);
             repaint();
@@ -426,6 +399,18 @@ public class Swing extends JFrame implements ActionListener{
         	g.setFont(font);
         	for (int i = 1; i < nodePos.size(); i++) {
         		g.drawString(Integer.toString(i), nodePos.get(i).GetXPos() - 8, nodePos.get(i).GetYPos() + 8);
+        	}
+        }
+        
+        public void DrawNodeLength(Graphics2D g) {
+        	for (int i = 1; i < adj.size(); i++) {
+        		for (int j = 0; j < adj.get(i).size();j++) {
+        			//adj.get(i).get(j).GetTargetNode()
+        			String value=String.valueOf(adj.get(i).get(j).GetValue());
+        			float Posx=(nodePos.get(i).GetXPos()+nodePos.get(adj.get(i).get(j).GetTargetNode()).GetXPos())/2;
+        			float Posy=(nodePos.get(i).GetYPos()+nodePos.get(adj.get(i).get(j).GetTargetNode()).GetYPos())/2;
+        			g.drawString(value,Posx,Posy);
+        		}
         	}
         }
     }
