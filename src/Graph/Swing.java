@@ -114,6 +114,7 @@ public class Swing extends JFrame implements ActionListener{
     	
     	int count = 0;
     	ArrayList<Integer> node = new ArrayList<Integer>();
+    	ArrayList<Integer> shortestPath = new ArrayList<Integer>();
     	
     	@Override
     	public void mouseDragged(MouseEvent e){
@@ -205,7 +206,17 @@ public class Swing extends JFrame implements ActionListener{
     			}
     			
     			if (count == 2) {
-    				ArrayList<Integer> shortestPath = graph.GetShortestPath(node.get(0), node.get(1));
+    				shortestPath = graph.GetShortestPath(node.get(0), node.get(1));
+    				
+    				toolBar.jButton.get(2).setBackground(Color.darkGray);
+    	    	    toolBar.jButton.get(2).setForeground(Color.white);
+    	    	    
+    	    	    panel.repaint();
+    	    	    
+    	    	    toolBar.clickedGetShortestPath = false;
+    	    	    count = 0;
+    				node.clear();
+    				
     				System.out.println(shortestPath);
     			}
     		}
@@ -367,11 +378,18 @@ public class Swing extends JFrame implements ActionListener{
         	for (int i = 1; i < nodePos.size(); i++) {
             	Shape circleShape = new Ellipse2D.Float(nodePos.get(i).GetXPos() - 50, nodePos.get(i).GetYPos() - 50, 100, 100);
             	g.setColor(Color.white);
-            	if (events.node.size() > 0) {
+            	if (!events.node.isEmpty()) {
 	            	for (int j = 0; j < events.node.size(); j++) {
 	            		if (events.node.get(j).equals(i))
 	            			g.setColor(Color.red);
-	            	}            	
+	            	}
+            	}
+            	
+            	if (!events.shortestPath.isEmpty()) {
+            		for (int j = 0; j < events.shortestPath.size(); j++) {
+            			if (events.shortestPath.get(j).equals(i))
+            				g.setColor(Color.green);
+            		}
             	}
             	g.fill(circleShape);
             	g.draw(circleShape);
@@ -386,9 +404,17 @@ public class Swing extends JFrame implements ActionListener{
         	for (int i = 1; i < adj.size(); i++) {
         		for (int j = 0; j < adj.get(i).size();j++) {
         			Line2D curLine = new Line2D.Float(nodePos.get(i).GetXPos(), nodePos.get(i).GetYPos(), nodePos.get(adj.get(i).get(j).GetTargetNode()).GetXPos(), nodePos.get(adj.get(i).get(j).GetTargetNode()).GetYPos());
+        			if (!events.shortestPath.isEmpty()) {
+                		for (int k = 0; k < events.shortestPath.size() - 1; k++) {
+                			if (adj.get(i).get(j).GetTargetNode() == events.shortestPath.get(k + 1) && i == events.shortestPath.get(k)) {
+                				g.setColor(Color.green);
+                			}
+                			else
+                				g.setColor(Color.gray);
+                		} // 오류!
+                	}
     				g.draw(curLine);
     				lines.add(curLine);
-    				g.draw(curLine);
         		}
         	}
         }
@@ -461,8 +487,8 @@ public class Swing extends JFrame implements ActionListener{
 			
 			// 최단 경로 구하기
 			if (e.getSource() == jButton.get(2)) {
-				jButton.get(1).setBackground(Color.white);
-				jButton.get(1).setForeground(Color.darkGray);
+				jButton.get(2).setBackground(Color.white);
+				jButton.get(2).setForeground(Color.darkGray);
 				clickedGetShortestPath = true;
 			}
 		}
