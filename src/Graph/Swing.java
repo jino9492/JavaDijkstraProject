@@ -6,6 +6,7 @@ import javax.swing.event.AncestorListener;
 import Graph.Swing.Panel;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.awt.*;import java.awt.dnd.DragSourceAdapter;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
@@ -255,13 +256,30 @@ public class Swing extends JFrame implements ActionListener{
     	@Override
     	public void mouseExited(MouseEvent e) {}
     }
-
+    public Boolean overlapCheck(int i,int j) {//만약 중복이면 true
+    	int startNode;
+    	int endNode;
+    	startNode=i;
+    	endNode=adj.get(i).get(j).GetTargetNode();
+    	ArrayList<Pair> arr=new ArrayList<>();
+    	if(!arr.contains(new Pair(endNode,startNode))) {
+    		arr.add(new Pair(startNode,endNode));
+    		return false;
+    	}
+    	return true;
+    }
+    class Pair{
+    	int x,y;
+    	Pair(int x,int y){
+    		this.x=x;
+    		this.y=y;
+    	}
+    }
     public class UI extends JPanel implements ActionListener, KeyListener{
     	
     	JPanel uiPanel;
     	ArrayList<JPanel> jPanel = new ArrayList<JPanel>();
     	JScrollPane panelPane = new JScrollPane(uiPanel);
-    	
     	public UI(int size) {
     		count = 1;
     		uiPanel = new JPanel();
@@ -271,10 +289,11 @@ public class Swing extends JFrame implements ActionListener{
     		tf.add(null);
     		bt.add(null); 
     		jPanel.add(null);
-    		
+    		System.out.println("----");
     		for(int i = 1; i < adj.size(); i++) {
     			for (int j = 0; j < adj.get(i).size(); j++) {
-    				//if로 여기서 중복 확인하긴
+    				if(!overlapCheck(i,j))
+    					System.out.println(".");
     				InsertTextFieldAndButton(i, adj.get(i).get(j).GetTargetNode());
     			}
     		}
@@ -297,6 +316,7 @@ public class Swing extends JFrame implements ActionListener{
     				//여기서 중복 확인하기
     				if(e.getSource()==bt.get(count)) {
     					float value=Float.valueOf(tf.get(count).getText());
+    					
         				adj.get(i).get(j).SetValue(value);
     				}
     				count++;
