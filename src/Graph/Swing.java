@@ -204,34 +204,7 @@ public class Swing extends JFrame implements ActionListener{
     		
     		// 노드 삭제
     		if (toolBar.isClickedDeleteNode) {
-    			int curNode = 0;
-    			for (int i = 1; i < nodePos.size(); i++) {
-        		    if (mx > nodePos.get(i).GetXPos() - 50 && mx < nodePos.get(i).GetXPos() + 50 && my > nodePos.get(i).GetYPos() - 50 && my < nodePos.get(i).GetYPos() + 50){
-        		    	curNode = i;
-        		    }
-        		}
-    			
-    			graph.GetPath().set(curNode, null);
-    			graph.GetDist().set(curNode, null);
-    			
-    			for (int i = 0; i < adj.get(curNode).size(); i++) {
-    				for (int j  = 0; j < adj.get(adj.get(curNode).get(i).GetTargetNode()).size(); j++) {
-    					if (adj.get(adj.get(curNode).get(i).GetTargetNode()).get(j).GetTargetNode() == curNode) {
-    						adj.get(adj.get(curNode).get(i).GetTargetNode()).remove(j);
-    					}
-    				}
-    			}
-    			
-    			adj.get(curNode).clear();
-    			adj.set(curNode, null);
-        	    
-        	    toolBar.jButton.get(4).setBackground(Color.darkGray);
-        	    toolBar.jButton.get(4).setForeground(Color.white);
-        	    
-        	    panel.repaint();
-    			
-    			toolBar.isClickedInsertNode = false;
-    			Reset();
+    			DeleteNode(mx, my);
     		}
     	}
     	
@@ -316,6 +289,36 @@ public class Swing extends JFrame implements ActionListener{
 			}
     	}
     	
+    	public void DeleteNode(float mx, float my) {
+    		int curNode = 0;
+			for (int i = 1; i < nodePos.size(); i++) {
+    		    if (mx > nodePos.get(i).GetXPos() - 50 && mx < nodePos.get(i).GetXPos() + 50 && my > nodePos.get(i).GetYPos() - 50 && my < nodePos.get(i).GetYPos() + 50){
+    		    	curNode = i;
+    		    }
+    		}
+			
+			graph.GetPath().set(curNode, null);
+			graph.GetDist().set(curNode, null);
+			
+			for (int i = 0; i < adj.get(curNode).size(); i++) {
+				for (int j  = 0; j < adj.get(adj.get(curNode).get(i).GetTargetNode()).size(); j++) {
+					if (adj.get(adj.get(curNode).get(i).GetTargetNode()).get(j).GetTargetNode() == curNode) {
+						adj.get(adj.get(curNode).get(i).GetTargetNode()).remove(j);
+					}
+				}
+			}
+			
+			adj.get(curNode).clear();
+			adj.set(curNode, null);
+    	    
+    	    toolBar.jButton.get(4).setBackground(Color.darkGray);
+    	    toolBar.jButton.get(4).setForeground(Color.white);
+    	    
+    	    panel.repaint();
+			
+			toolBar.isClickedInsertNode = false;
+			Reset();
+    	}
     	@Override
     	public void mouseEntered(MouseEvent e) {}
 
@@ -348,7 +351,7 @@ public class Swing extends JFrame implements ActionListener{
     	}
     	@Override
 		public void actionPerformed(ActionEvent e) {
-    		int count=1;
+    		int count=0;
     		/*for(int i=0;i<count;i++) {//adj.size는 나중에 버튼의 갯수로 바꾸기
     			if(e.getSource()==bt.get(i)) {
     				String length=tf.get(i).getText();
