@@ -241,16 +241,33 @@ public class Swing extends JFrame implements ActionListener{
     		
     		for(int i = 1; i < adj.size(); i++) {
     			for (int j = 0; j < adj.get(i).size(); j++) {
+    				//if로 여기서 중복 확인하긴
     				InsertTextFieldAndButton(i, adj.get(i).get(j).GetTargetNode());
     			}
     		}
     	}
     	@Override
 		public void actionPerformed(ActionEvent e) {
-    		int k=6;//간선의수
-    			if(e.getSource()==bt.get(1)) {//1개빡에 안됨
-    				System.out.println(tf.get(1).getText());
+    		int k=6;
+    		int count=1;
+    		/*for(int i=0;i<count;i++) {//adj.size는 나중에 버튼의 갯수로 바꾸기
+    			if(e.getSource()==bt.get(i)) {
+    				String length=tf.get(i).getText();
+    				System.out.println(length);
+    				float value=Float.valueOf(tf.get(i).getText());
+    				adj.get(i).get(j).SetValue(value);
     			}
+    		}*/
+    		for(int i = 1; i < adj.size(); i++) {
+    			for (int j = 0; j < adj.get(i).size(); j++) {
+    				//여기서 중복 확인하기
+    				if(e.getSource()==bt.get(count)) {
+    					float value=Float.valueOf(tf.get(i).getText());
+        				adj.get(i).get(j).SetValue(value);
+    				}
+    				count++;
+    			}
+    		}
     	}
     	
     	public void InsertTextFieldAndButton(int curNode, int targetNode) {

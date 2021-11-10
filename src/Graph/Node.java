@@ -17,6 +17,10 @@ public class Node implements Comparable<Node>{
 		return value;
 	}
 	
+	public void SetValue(float value) {
+		this.value = value;
+	}
+	
 	@Override
 	public int compareTo(Node node) {
 		return this.value >= node.value ? 1 : -1;
