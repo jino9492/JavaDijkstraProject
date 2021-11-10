@@ -26,7 +26,21 @@ public class Graph{
 	}
 	
 	private void CheckAllShortestPath(int startNode){ // startNode에서 모든 노드까지의 최단 경로 및 거리를 계산
+		for (int i = 1; i < dist.size(); i++) {
+			if (dist.get(i) == null)
+				continue;
+			
+			dist.set(i, Float.POSITIVE_INFINITY);
+		}
+		
 		dist.set(startNode, (float) 0);
+		
+		for (int i = 1; i < path.size(); i++) {
+			if (path.get(i) == null)
+				continue;
+			
+			path.get(i).clear();
+		}
 		path.get(startNode).add(startNode);
 		
 		PriorityQueue<Node> pq = new PriorityQueue<Node>();
@@ -69,6 +83,13 @@ public class Graph{
 			adj.get(thisNode).add(new Node(targetNode, 0));
 		else
 			throw new IllegalArgumentException("This args are can not be 0.");
+	}
+	
+	public void DisconnectNodes(int thisNode, int targetNode) {
+		for (int i = 0; i < adj.get(thisNode).size(); i++) {
+			if(adj.get(thisNode).get(i).GetTargetNode() == targetNode)
+				adj.get(thisNode).remove(i);
+		}
 	}
 	
 	public ArrayList<Integer> GetShortestPath(int startNode, int endNode) { // 최단 경로 구하기
