@@ -2,25 +2,15 @@ package Graph;
 
 import javax.swing.*;
 import javax.swing.event.AncestorListener;
-
 import Graph.Swing.Panel;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.awt.*;import java.awt.dnd.DragSourceAdapter;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Line2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.util.*;
+import java.awt.dnd.DragSourceAdapter;
+import java.awt.*;
+import java.awt.geom.*;
+import java.awt.event.*;
 
 
-public class Swing extends JFrame implements ActionListener{
+public class Swing extends JFrame{
 	protected Graph graph;
 	protected ArrayList<Circle> nodePos;
 	protected ArrayList<ArrayList<Node>> adj;
@@ -83,7 +73,6 @@ public class Swing extends JFrame implements ActionListener{
     	
     	
     	add(panel, BorderLayout.CENTER);
-    	//SetTextFiled();as
     	add(toolBar, BorderLayout.PAGE_START);
     	add(ui,BorderLayout.EAST);
     	revalidate();
@@ -783,6 +772,8 @@ public class Swing extends JFrame implements ActionListener{
 			count++;
 		}
     }
+
+	
 
 }
 
