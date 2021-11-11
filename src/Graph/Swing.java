@@ -28,8 +28,8 @@ public class Swing extends JFrame implements ActionListener{
 	private int count;
 	
 	Panel panel = new Panel();
-	ArrayList<JTextField> tf = new ArrayList<JTextField>();
-	ArrayList<JButton> bt = new ArrayList<JButton>();
+	ArrayList<ArrayList<JTextField>> tf = new ArrayList<ArrayList<JTextField>>();
+	ArrayList<ArrayList<JButton>> bt = new ArrayList<ArrayList<JButton>>();
 	ToolBar toolBar = new ToolBar();
 	UI ui;
 	
@@ -360,17 +360,24 @@ public class Swing extends JFrame implements ActionListener{
     		bt.add(null); 
     		jPanel.add(null);
     		System.out.println("----");
+    		for(int i=1;i<adj.size();i++) {
+    			tf.add(new ArrayList<JTextField>());
+    			bt.add(new ArrayList<JButton>());
+    			for(int j=0;j<adj.get(i).size();j++) {
+    				tf.get(i).add(new JTextField());
+    				bt.get(i).add(new JButton(i+" - "+adj.get(i).get(j).GetTargetNode()));
+    			}
+    		}
     		for(int i = 1; i < adj.size(); i++) {
     			for (int j = 0; j < adj.get(i).size(); j++) {
     				if(!overlapCheck(i,j))
     					System.out.println(".");
-    				InsertTextFieldAndButton(i, adj.get(i).get(j).GetTargetNode());
+    				InsertTextFieldAndButton();
     			}
     		}
     	}
     	@Override
 		public void actionPerformed(ActionEvent e) {
-    		int count=0;
     		/*for(int i=0;i<count;i++) {//adj.size는 나중에 버튼의 갯수로 바꾸기
     			if(e.getSource()==bt.get(i)) {
     				String length=tf.get(i).getText();
@@ -381,11 +388,11 @@ public class Swing extends JFrame implements ActionListener{
     		}*/
     		for(int i = 1; i < adj.size(); i++) {
     			for (int j = 0; j < adj.get(i).size(); j++) {
-    				if (tf.get(i).getText().isEmpty())
+    				if (tf.get(i).get(j).getText().isEmpty())
     					continue;
     				//여기서 중복 확인하기
-    				if(e.getSource()==bt.get(count)) {
-    					float value=Float.valueOf(tf.get(count).getText());
+    				if(e.getSource()==bt.get(i).get(j)) {
+    					float value=Float.valueOf(tf.get(i).get(j).getText());
     					
         				adj.get(i).get(j).SetValue(value);
     				}
@@ -394,10 +401,17 @@ public class Swing extends JFrame implements ActionListener{
     		}
     	}
     	
-    	public void InsertTextFieldAndButton(int curNode, int targetNode) {
+    	public void InsertTextFieldAndButton() {
     		jPanel.add(new JPanel());
-    		tf.add(new JTextField());
-    		bt.add(new JButton(curNode + " - " + targetNode));
+    		tf.add(new ArrayList<JTextField>());
+    		for(int i=1;i<tf.size();i++) {
+    			tf.get(i).add(new JTextField());
+    		}
+    		bt.add(new ArrayList<JButton>());
+    		for(int i=1;i<bt.size();i++) {
+    			bt.get(i).add(new JButton(curNode+" - "+targetNode));
+    		}
+
     		
     		jPanel.get(count).add(tf.get(count));
 			jPanel.get(count).add(bt.get(count));
