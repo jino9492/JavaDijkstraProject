@@ -10,7 +10,8 @@ import java.awt.geom.*;
 import java.awt.event.*;
 
 
-public class Swing extends JFrame{
+public class Swing extends JFrame {
+	
 	protected Graph graph;
 	protected ArrayList<Circle> nodePos;
 	protected ArrayList<ArrayList<Node>> adj;
@@ -356,8 +357,7 @@ public class Swing extends JFrame{
     }
     
     public class UI extends JPanel implements ActionListener, KeyListener{
-    	
-    	JPanel uiPanel;
+		JPanel uiPanel;
     	ArrayList<ArrayList<JPanel>> jPanel = new ArrayList<>();
     	JScrollPane panelPane = new JScrollPane(uiPanel);
     	ArrayList<ArrayList<Integer>> arr = new ArrayList<>();
@@ -430,7 +430,7 @@ public class Swing extends JFrame{
     				jPanel.get(curNode).get(i).add(bt.get(curNode).get(i));
     				
     				jPanel.get(curNode).get(i).setMinimumSize(new Dimension(200, 60));
-    				bt.get(curNode).get(i).setPreferredSize(new Dimension(70, 50));
+    				bt.get(curNode).get(i).setPreferredSize(new Dimension(100, 50));
     				tf.get(curNode).get(i).setPreferredSize(new Dimension(150, 50));
     				
     				tf.get(curNode).get(i).setHorizontalAlignment(JTextField.CENTER);
@@ -489,7 +489,7 @@ public class Swing extends JFrame{
     }
 
     public class Panel extends JPanel{
-    	Image buffImg;
+		Image buffImg;
         Graphics buffG;
         Events events;
         
@@ -543,8 +543,9 @@ public class Swing extends JFrame{
             	
             	if (!events.node.isEmpty()) {
 	            	for (int j = 0; j < events.node.size(); j++) {
-	            		if (events.node.get(j).equals(i))
+	            		if (events.node.get(j).equals(i)) {
 	            			g.setColor(Color.red);
+	            		}
 	            	}
             	}
             	
@@ -612,8 +613,7 @@ public class Swing extends JFrame{
     }
 
     public class ToolBar extends JToolBar implements ActionListener{
-    	
-    	int count = 0;
+		int count = 0;
     	JPanel jPanel;
     	ArrayList<JButton> jButton;
     	Color defaultButtonColor = Color.darkGray;
@@ -646,6 +646,7 @@ public class Swing extends JFrame{
 		public void actionPerformed(ActionEvent e) {
 			panel.events.node.clear();
 			panel.events.count = 0;
+			panel.events.shortestPath.clear();
 			
 			// 노드 추가 버튼을 눌렀을 때
 			if (e.getSource() == jButton.get(0)) {
