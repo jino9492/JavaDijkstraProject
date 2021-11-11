@@ -28,8 +28,11 @@ public class Swing extends JFrame implements ActionListener{
 	private int count;
 	
 	Panel panel = new Panel();
+<<<<<<< HEAD
 	ArrayList<ArrayList<JTextField>> tf = new ArrayList<ArrayList<JTextField>>();
 	ArrayList<ArrayList<JButton>> bt = new ArrayList<ArrayList<JButton>>();
+=======
+>>>>>>> eea68cc4e9008e4f6b62252d4d15bc893856cf0c
 	ToolBar toolBar = new ToolBar();
 	UI ui;
 	
@@ -90,18 +93,7 @@ public class Swing extends JFrame implements ActionListener{
     	add(ui,BorderLayout.EAST);
     	revalidate();
     }
-
-    
-    public void actionPerformed(ActionEvent e) {
-    	for(int i=1;i<11;i++) {
-    		//if(e.getSource()==bt[i]) {
-    			//System.out.println(tf[i].getText());
-    		}
-    	}
-	
-
-    
-    
+  	
     public static void main(String[] args) {
     	new Swing(6);
 	}
@@ -134,6 +126,8 @@ public class Swing extends JFrame implements ActionListener{
     	    float mx = e.getX();
     	    float my = e.getY();
     	    for (int i = 1; i < nodePos.size(); i++) {
+    	    	if (nodePos.get(i) == null)
+    	    		continue;
     		    if (mx > nodePos.get(i).GetXPos() - 50 && mx < nodePos.get(i).GetXPos() + 50 && my > nodePos.get(i).GetYPos() - 50 && my < nodePos.get(i).GetYPos() + 50){
     		        dragging = true;
     		        nodeNum = i;
@@ -165,6 +159,12 @@ public class Swing extends JFrame implements ActionListener{
         	    graph.GetPath().add(new ArrayList<Integer>());
         	    graph.GetDist().add(Float.POSITIVE_INFINITY);
         	    graph.GetAdj().add(new ArrayList<Node>());
+        	    
+        	    ui.tf.add(new ArrayList<JTextField>());
+        	    ui.bt.add(new ArrayList<JButton>());
+        	    ui.jPanel.add(new ArrayList<JPanel>());
+        	    ui.arr.add(new ArrayList<Integer>());
+        	    
         	    nodePos.add(new Circle(mx, my));
         	    
         	    toolBar.jButton.get(0).setBackground(Color.darkGray);
@@ -223,6 +223,12 @@ public class Swing extends JFrame implements ActionListener{
 				graph.ConnectNodes(node1, node2);
 				graph.ConnectNodes(node2, node1);
 				
+				ui.tf.get(node1).add(new JTextField());
+				ui.bt.get(node1).add(new JButton(node1 + " - " + node2));
+				
+				ui.tf.get(node2).add(new JTextField());
+				ui.bt.get(node2).add(new JButton(node2 + " - " + node1));
+				
 				ui.InsertTextFieldAndButton(node1, node2);
 			}
 			
@@ -238,6 +244,36 @@ public class Swing extends JFrame implements ActionListener{
     	public void Disconnect() {
     		int node1 = node.get(0);
 			int node2 = node.get(1);
+			
+			for (int i = 0; i < adj.get(node1).size(); i++) {
+				if (adj.get(node1).get(i).GetTargetNode() == node2) {
+					ui.remove(ui.panelPane);
+					ui.uiPanel.remove(ui.jPanel.get(node1).get(i));
+					ui.panelPane = new JScrollPane(ui.uiPanel);
+    				
+    				ui.panelPane.getVerticalScrollBar().setUnitIncrement(16);
+    				ui.panelPane.setPreferredSize(new Dimension(300, 800));
+    				
+    				ui.add(ui.panelPane);
+    				ui.revalidate();
+    				ui.repaint();
+				}
+			}
+			
+			for (int i = 0; i < adj.get(node2).size(); i++) {
+				if (adj.get(node2).get(i).GetTargetNode() == node1) {
+					ui.remove(ui.panelPane);
+					ui.uiPanel.remove(ui.jPanel.get(node2).get(i));
+					ui.panelPane = new JScrollPane(ui.uiPanel);
+    				
+    				ui.panelPane.getVerticalScrollBar().setUnitIncrement(16);
+    				ui.panelPane.setPreferredSize(new Dimension(300, 800));
+    				
+    				ui.add(ui.panelPane);
+    				ui.revalidate();
+    				ui.repaint();
+				}
+			}
 			
 			graph.DisconnectNodes(node1, node2);
 			graph.DisconnectNodes(node2, node1);
@@ -279,38 +315,55 @@ public class Swing extends JFrame implements ActionListener{
     	
     	public void SelectNode(float mx, float my) {
     		for (int i = 1; i < nodePos.size(); i++) {
-    		    if (mx > nodePos.get(i).GetXPos() - 50 && mx < nodePos.get(i).GetXPos() + 50 && my > nodePos.get(i).GetYPos() - 50 && my < nodePos.get(i).GetYPos() + 50){
-    		    	if (count == 1)
-    		    		if (node.get(0) == i)
-    		    			break;
-    		    	
-    		    	node.add(i);
-    		    	count++;
-    		    }
+    			if (nodePos.get(i) != null)
+	    		    if (mx > nodePos.get(i).GetXPos() - 50 && mx < nodePos.get(i).GetXPos() + 50 && my > nodePos.get(i).GetYPos() - 50 && my < nodePos.get(i).GetYPos() + 50){
+	    		    	if (count == 1)
+	    		    		if (node.get(0) == i)
+	    		    			break;
+	    		    	
+	    		    	node.add(i);
+	    		    	count++;
+	    		    }
 			}
     	}
     	
     	public void DeleteNode(float mx, float my) {
     		int curNode = 0;
 			for (int i = 1; i < nodePos.size(); i++) {
-    		    if (mx > nodePos.get(i).GetXPos() - 50 && mx < nodePos.get(i).GetXPos() + 50 && my > nodePos.get(i).GetYPos() - 50 && my < nodePos.get(i).GetYPos() + 50){
-    		    	curNode = i;
-    		    }
+				if (nodePos.get(i) != null)
+	    		    if (mx > nodePos.get(i).GetXPos() - 50 && mx < nodePos.get(i).GetXPos() + 50 && my > nodePos.get(i).GetYPos() - 50 && my < nodePos.get(i).GetYPos() + 50){
+	    		    	curNode = i;
+	    		    }
     		}
 			
 			graph.GetPath().set(curNode, null);
 			graph.GetDist().set(curNode, null);
 			
-			for (int i = 0; i < adj.get(curNode).size(); i++) {
-				for (int j  = 0; j < adj.get(adj.get(curNode).get(i).GetTargetNode()).size(); j++) {
-					if (adj.get(adj.get(curNode).get(i).GetTargetNode()).get(j).GetTargetNode() == curNode) {
-						adj.get(adj.get(curNode).get(i).GetTargetNode()).remove(j);
+			if (nodePos.get(curNode) != null) {
+				for (int i = 0; i < adj.get(curNode).size(); i++) {
+					for (int j  = 0; j < adj.get(adj.get(curNode).get(i).GetTargetNode()).size(); j++) {
+						if (adj.get(adj.get(curNode).get(i).GetTargetNode()).get(j).GetTargetNode() == curNode) {
+							adj.get(adj.get(curNode).get(i).GetTargetNode()).remove(j);
+							
+							ui.remove(ui.panelPane);
+							ui.uiPanel.remove(ui.jPanel.get(curNode).get(i));
+							ui.uiPanel.remove(ui.jPanel.get(adj.get(curNode).get(i).GetTargetNode()).get(j));
+							ui.panelPane = new JScrollPane(ui.uiPanel);
+		    				
+		    				ui.panelPane.getVerticalScrollBar().setUnitIncrement(16);
+		    				ui.panelPane.setPreferredSize(new Dimension(300, 800));
+		    				
+		    				ui.add(ui.panelPane);
+		    				ui.revalidate();
+		    				ui.repaint();
+						}
 					}
 				}
+				
+				adj.get(curNode).clear();
+				adj.set(curNode, null);
+				nodePos.set(curNode, null);
 			}
-			
-			adj.get(curNode).clear();
-			adj.set(curNode, null);
     	    
     	    toolBar.jButton.get(4).setBackground(Color.darkGray);
     	    toolBar.jButton.get(4).setForeground(Color.white);
@@ -320,45 +373,34 @@ public class Swing extends JFrame implements ActionListener{
 			toolBar.isClickedInsertNode = false;
 			Reset();
     	}
+    	
     	@Override
     	public void mouseEntered(MouseEvent e) {}
 
     	@Override
     	public void mouseExited(MouseEvent e) {}
     }
-    public Boolean overlapCheck(int i,int j) {//만약 중복이면 true
-    	int startNode;
-    	int endNode;
-    	startNode=i;
-    	endNode=adj.get(i).get(j).GetTargetNode();
-    	ArrayList<Pair> arr=new ArrayList<>();
-    	if(!arr.contains(new Pair(endNode,startNode))) {
-    		arr.add(new Pair(startNode,endNode));
-    		return false;
-    	}
-    	return true;
-    }
-    class Pair{
-    	int x,y;
-    	Pair(int x,int y){
-    		this.x=x;
-    		this.y=y;
-    	}
-    }
+    
     public class UI extends JPanel implements ActionListener, KeyListener{
     	
     	JPanel uiPanel;
-    	ArrayList<JPanel> jPanel = new ArrayList<JPanel>();
+    	ArrayList<ArrayList<JPanel>> jPanel = new ArrayList<>();
     	JScrollPane panelPane = new JScrollPane(uiPanel);
+    	ArrayList<ArrayList<Integer>> arr = new ArrayList<>();
+    	
+    	ArrayList<ArrayList<JTextField>> tf = new ArrayList<>();
+    	ArrayList<ArrayList<JButton>> bt = new ArrayList<>();
+    	
     	public UI(int size) {
-    		count = 1;
     		uiPanel = new JPanel();
     		uiPanel.setLayout(new BoxLayout(uiPanel, BoxLayout.Y_AXIS));
     		uiPanel.setBackground(Color.WHITE);
     		
+    		arr.add(null);
     		tf.add(null);
     		bt.add(null); 
     		jPanel.add(null);
+<<<<<<< HEAD
     		System.out.println("----");
     		for(int i=1;i<adj.size();i++) {
     			tf.add(new ArrayList<JTextField>());
@@ -373,11 +415,34 @@ public class Swing extends JFrame implements ActionListener{
     				if(!overlapCheck(i,j))
     					System.out.println(".");
     				InsertTextFieldAndButton();
+=======
+    		
+    		for(int i = 1; i < adj.size(); i++) {
+    			arr.add(new ArrayList<Integer>());
+    			jPanel.add(new ArrayList<JPanel>());
+    			tf.add(new ArrayList<JTextField>());
+    			bt.add(new ArrayList<JButton>());
+    			for (int j = 0; j < adj.get(i).size(); j++) {
+    				jPanel.get(i).add(new JPanel());
+    				tf.get(i).add(new JTextField(String.valueOf(adj.get(i).get(j).GetValue())));
+        			bt.get(i).add(new JButton(i + " - " + adj.get(i).get(j).GetTargetNode()));
+    			}
+    		}
+    		
+    		for(int i = 1; i < adj.size(); i++) {
+    			for (int j = 0; j < adj.get(i).size(); j++) {
+    				if(!overlapCheck(i, adj.get(i).get(j).GetTargetNode())){
+    					continue;
+    				}
+    				
+    				InsertTextFieldAndButton(i, adj.get(i).get(j).GetTargetNode());
+>>>>>>> eea68cc4e9008e4f6b62252d4d15bc893856cf0c
     			}
     		}
     	}
     	@Override
 		public void actionPerformed(ActionEvent e) {
+<<<<<<< HEAD
     		/*for(int i=0;i<count;i++) {//adj.size는 나중에 버튼의 갯수로 바꾸기
     			if(e.getSource()==bt.get(i)) {
     				String length=tf.get(i).getText();
@@ -386,21 +451,35 @@ public class Swing extends JFrame implements ActionListener{
     				adj.get(i).get(j).SetValue(value);
     			}
     		}*/
+=======
+>>>>>>> eea68cc4e9008e4f6b62252d4d15bc893856cf0c
     		for(int i = 1; i < adj.size(); i++) {
     			for (int j = 0; j < adj.get(i).size(); j++) {
     				if (tf.get(i).get(j).getText().isEmpty())
     					continue;
+<<<<<<< HEAD
     				//여기서 중복 확인하기
     				if(e.getSource()==bt.get(i).get(j)) {
     					float value=Float.valueOf(tf.get(i).get(j).getText());
+=======
+    				
+    				if(e.getSource()==bt.get(i).get(j)) {
+    					float value = Float.parseFloat(tf.get(i).get(j).getText());
+>>>>>>> eea68cc4e9008e4f6b62252d4d15bc893856cf0c
     					
+    					System.out.println(value);
         				adj.get(i).get(j).SetValue(value);
+        				
+        				for (int k = 0; k < adj.get(adj.get(i).get(j).GetTargetNode()).size(); k++) {
+        					if (adj.get(adj.get(i).get(j).GetTargetNode()).get(k).GetTargetNode() == i)
+        						adj.get(adj.get(i).get(j).GetTargetNode()).get(k).SetValue(value);
+        				}
     				}
-    				count++;
     			}
     		}
     	}
     	
+<<<<<<< HEAD
     	public void InsertTextFieldAndButton() {
     		jPanel.add(new JPanel());
     		tf.add(new ArrayList<JTextField>());
@@ -412,40 +491,66 @@ public class Swing extends JFrame implements ActionListener{
     			bt.get(i).add(new JButton(curNode+" - "+targetNode));
     		}
 
+=======
+    	public void InsertTextFieldAndButton(int curNode, int targetNode) {
+    		jPanel.get(curNode).add(new JPanel());
+    		jPanel.get(targetNode).add(new JPanel());
+>>>>>>> eea68cc4e9008e4f6b62252d4d15bc893856cf0c
     		
-    		jPanel.get(count).add(tf.get(count));
-			jPanel.get(count).add(bt.get(count));
-			
-			jPanel.get(count).setMinimumSize(new Dimension(200, 60));
-			bt.get(count).setPreferredSize(new Dimension(60, 50));
-			tf.get(count).setPreferredSize(new Dimension(150, 50));
-			
-			tf.get(count).setHorizontalAlignment(JTextField.CENTER);
-			// 숫자만 혀용
-			tf.get(count).addKeyListener(new KeyAdapter() {
-	            public void keyTyped(KeyEvent evt) {
-	                if (!Character.isDigit(evt.getKeyChar())) {
-	                    evt.consume();
-	                }
-	            }
-	        });
-			
-			bt.get(count).addActionListener(this);
-			
-			remove(panelPane);
-			
-			uiPanel.add(jPanel.get(count));
-			panelPane = new JScrollPane(uiPanel);
-					
-			panelPane.getVerticalScrollBar().setUnitIncrement(16);
-			panelPane.setPreferredSize(new Dimension(300, 800));
-			
-			add(panelPane);
-			revalidate();
-			repaint();
-			
-			count++;
+    		for (int i = 0; i < adj.get(curNode).size(); i++) {
+    			if (adj.get(curNode).get(i).GetTargetNode() == targetNode) {
+    				System.out.println(jPanel.get(curNode).get(i));
+    				jPanel.get(curNode).get(i).add(tf.get(curNode).get(i));
+    				jPanel.get(curNode).get(i).add(bt.get(curNode).get(i));
+    				
+    				jPanel.get(curNode).get(i).setMinimumSize(new Dimension(200, 60));
+    				bt.get(curNode).get(i).setPreferredSize(new Dimension(70, 50));
+    				tf.get(curNode).get(i).setPreferredSize(new Dimension(150, 50));
+    				
+    				tf.get(curNode).get(i).setHorizontalAlignment(JTextField.CENTER);
+    				// 숫자만 혀용
+    				tf.get(curNode).get(i).addKeyListener(new KeyAdapter() {
+    					public void keyTyped(KeyEvent evt) {
+    						if (!Character.isDigit(evt.getKeyChar()) && !(evt.getKeyChar() == '.')) {
+    							evt.consume();
+    						}
+    					}
+    				});
+    				
+    				bt.get(curNode).get(i).addActionListener(this);
+    				
+    				remove(panelPane);
+    				
+    				uiPanel.add(jPanel.get(curNode).get(i));
+    				panelPane = new JScrollPane(uiPanel);
+    				
+    				panelPane.getVerticalScrollBar().setUnitIncrement(16);
+    				panelPane.setPreferredSize(new Dimension(300, 800));
+    				
+    				add(panelPane);
+    				revalidate();
+    				repaint();
+    			}
+    		}
+    		
+    		for (int i = 0; i< adj.get(targetNode).size(); i++) {
+    			if (adj.get(targetNode).get(i).GetTargetNode() == curNode) {
+    				jPanel.get(targetNode).get(i).add(tf.get(targetNode).get(i));
+    				jPanel.get(targetNode).get(i).add(bt.get(targetNode).get(i));
+    			}
+    		}
     	}
+    	
+    	public boolean overlapCheck(int startNode,int endNode) {//만약 중복이면 true
+        	if(arr.get(endNode).contains(startNode) && arr.get(endNode).contains(endNode)) {
+        		return true;
+        	}
+        	else {
+        		arr.get(startNode).add(startNode);
+        		arr.get(startNode).add(endNode);
+        		return false;
+        	}
+        }
     	
 		@Override
 		public void keyTyped(KeyEvent e) {}
@@ -498,7 +603,7 @@ public class Swing extends JFrame implements ActionListener{
         
         public void DrawNode(Graphics2D g) {
         	for (int i = 1; i < nodePos.size(); i++) {
-        		if (adj.get(i) == null)
+        		if (nodePos.get(i) == null)
         			continue;
             	Shape circleShape = new Ellipse2D.Float(nodePos.get(i).GetXPos() - 50, nodePos.get(i).GetYPos() - 50, 100, 100);
             	g.setColor(Color.white);
@@ -530,6 +635,8 @@ public class Swing extends JFrame implements ActionListener{
         		if (adj.get(i) == null)
         			continue;
         		for (int j = 0; j < adj.get(i).size();j++) {
+        			if (nodePos.get(i).equals(null))
+        				continue;
         			Line2D curLine = new Line2D.Float(nodePos.get(i).GetXPos(), nodePos.get(i).GetYPos(), nodePos.get(adj.get(i).get(j).GetTargetNode()).GetXPos(), nodePos.get(adj.get(i).get(j).GetTargetNode()).GetYPos());
         			g.setColor(Color.gray);
         			if (!events.shortestPath.isEmpty()) {
@@ -567,6 +674,8 @@ public class Swing extends JFrame implements ActionListener{
         			continue;
         		for (int j = 0; j < adj.get(i).size();j++) {
         			//adj.get(i).get(j).GetTargetNode()
+        			if(!Swing.this.ui.overlapCheck(i, adj.get(i).get(j).GetTargetNode()))
+        				continue;
         			String value=String.valueOf(adj.get(i).get(j).GetValue());
         			float Posx=(nodePos.get(i).GetXPos()+nodePos.get(adj.get(i).get(j).GetTargetNode()).GetXPos())/2;
         			float Posy=(nodePos.get(i).GetYPos()+nodePos.get(adj.get(i).get(j).GetTargetNode()).GetYPos())/2;
@@ -674,5 +783,10 @@ public class Swing extends JFrame implements ActionListener{
 			count++;
 		}
     }
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }
 
