@@ -783,10 +783,6 @@ public class Swing extends JFrame implements ActionListener{
 			count++;
 		}
     }
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+
 }
 
