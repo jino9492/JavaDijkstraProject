@@ -28,11 +28,6 @@ public class Swing extends JFrame implements ActionListener{
 	private int count;
 	
 	Panel panel = new Panel();
-<<<<<<< HEAD
-	ArrayList<ArrayList<JTextField>> tf = new ArrayList<ArrayList<JTextField>>();
-	ArrayList<ArrayList<JButton>> bt = new ArrayList<ArrayList<JButton>>();
-=======
->>>>>>> eea68cc4e9008e4f6b62252d4d15bc893856cf0c
 	ToolBar toolBar = new ToolBar();
 	UI ui;
 	
@@ -88,7 +83,7 @@ public class Swing extends JFrame implements ActionListener{
     	
     	
     	add(panel, BorderLayout.CENTER);
-    	//SetTextFiled();
+    	//SetTextFiled();as
     	add(toolBar, BorderLayout.PAGE_START);
     	add(ui,BorderLayout.EAST);
     	revalidate();
@@ -400,22 +395,6 @@ public class Swing extends JFrame implements ActionListener{
     		tf.add(null);
     		bt.add(null); 
     		jPanel.add(null);
-<<<<<<< HEAD
-    		System.out.println("----");
-    		for(int i=1;i<adj.size();i++) {
-    			tf.add(new ArrayList<JTextField>());
-    			bt.add(new ArrayList<JButton>());
-    			for(int j=0;j<adj.get(i).size();j++) {
-    				tf.get(i).add(new JTextField());
-    				bt.get(i).add(new JButton(i+" - "+adj.get(i).get(j).GetTargetNode()));
-    			}
-    		}
-    		for(int i = 1; i < adj.size(); i++) {
-    			for (int j = 0; j < adj.get(i).size(); j++) {
-    				if(!overlapCheck(i,j))
-    					System.out.println(".");
-    				InsertTextFieldAndButton();
-=======
     		
     		for(int i = 1; i < adj.size(); i++) {
     			arr.add(new ArrayList<Integer>());
@@ -436,36 +415,18 @@ public class Swing extends JFrame implements ActionListener{
     				}
     				
     				InsertTextFieldAndButton(i, adj.get(i).get(j).GetTargetNode());
->>>>>>> eea68cc4e9008e4f6b62252d4d15bc893856cf0c
     			}
     		}
     	}
     	@Override
 		public void actionPerformed(ActionEvent e) {
-<<<<<<< HEAD
-    		/*for(int i=0;i<count;i++) {//adj.size는 나중에 버튼의 갯수로 바꾸기
-    			if(e.getSource()==bt.get(i)) {
-    				String length=tf.get(i).getText();
-    				System.out.println(length);
-    				float value=Float.valueOf(tf.get(i).getText());
-    				adj.get(i).get(j).SetValue(value);
-    			}
-    		}*/
-=======
->>>>>>> eea68cc4e9008e4f6b62252d4d15bc893856cf0c
     		for(int i = 1; i < adj.size(); i++) {
     			for (int j = 0; j < adj.get(i).size(); j++) {
     				if (tf.get(i).get(j).getText().isEmpty())
     					continue;
-<<<<<<< HEAD
-    				//여기서 중복 확인하기
-    				if(e.getSource()==bt.get(i).get(j)) {
-    					float value=Float.valueOf(tf.get(i).get(j).getText());
-=======
     				
     				if(e.getSource()==bt.get(i).get(j)) {
     					float value = Float.parseFloat(tf.get(i).get(j).getText());
->>>>>>> eea68cc4e9008e4f6b62252d4d15bc893856cf0c
     					
     					System.out.println(value);
         				adj.get(i).get(j).SetValue(value);
@@ -479,23 +440,9 @@ public class Swing extends JFrame implements ActionListener{
     		}
     	}
     	
-<<<<<<< HEAD
-    	public void InsertTextFieldAndButton() {
-    		jPanel.add(new JPanel());
-    		tf.add(new ArrayList<JTextField>());
-    		for(int i=1;i<tf.size();i++) {
-    			tf.get(i).add(new JTextField());
-    		}
-    		bt.add(new ArrayList<JButton>());
-    		for(int i=1;i<bt.size();i++) {
-    			bt.get(i).add(new JButton(curNode+" - "+targetNode));
-    		}
-
-=======
     	public void InsertTextFieldAndButton(int curNode, int targetNode) {
     		jPanel.get(curNode).add(new JPanel());
     		jPanel.get(targetNode).add(new JPanel());
->>>>>>> eea68cc4e9008e4f6b62252d4d15bc893856cf0c
     		
     		for (int i = 0; i < adj.get(curNode).size(); i++) {
     			if (adj.get(curNode).get(i).GetTargetNode() == targetNode) {
