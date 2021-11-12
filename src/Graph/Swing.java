@@ -212,9 +212,6 @@ public class Swing extends JFrame {
 				
 				ui.InsertTextFieldAndButton(node1, node2);
 			}
-			
-			toolBar.jButton.get(1).setBackground(Color.darkGray);
-    	    toolBar.jButton.get(1).setForeground(Color.white);
     	    
     	    panel.repaint();
 			
